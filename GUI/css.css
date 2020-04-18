@@ -1,0 +1,15 @@
+h1 {
+	font-size: 3em;
+}
+
+@keyframes mymove {
+	0% {
+		background-position-y: -10%;
+	}
+	50% {
+		background-position-y: 10%;
+	}
+	100% {
+		background-position-y: -10%;
+	}
+}
