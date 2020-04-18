@@ -1,0 +1,24 @@
+{
+  "name": "elon-zo",
+  "version": "0.0.0",
+  "description": "A game for Ludum Dare 46",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tolmera/LD46.git"
+  },
+  "keywords": [
+    "Game",
+    "LudumDare",
+    "Space"
+  ],
+  "author": "Bjorn Macintosh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tolmera/LD46/issues"
+  },
+  "homepage": "https://github.com/Tolmera/LD46#readme"
+}
