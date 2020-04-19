@@ -1,21 +1,26 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
 
   <title>Elon-zo</title>
   <meta name="description" content="A space trade and planet colonization game">
   <meta name="author" content="(c) Bjorn Macintosh 2020">
-  
+
+  <link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'>
+
   <!-- JQUERY -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"
+    integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+
   <!-- Three JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js" integrity="sha256-gSh8eotzb/CVvCREGPUNgIWuDnTYnZvVOQnRrP1eDjI=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"
+    integrity="sha256-gSh8eotzb/CVvCREGPUNgIWuDnTYnZvVOQnRrP1eDjI=" crossorigin="anonymous"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.module.js" integrity="sha256-JZ5o5Xz9wLA9cHaTan9Mri1nv349Sfu10LOi7bN2Npw=" crossorigin="anonymous"></script> -->
-  
+
   <!-- The actual game -->
-  <script src="bundle.js" ></script>
+  <script src="bundle.js"></script>
 
   <!-- Styling - I'm going to do that via JS -->
   <link rel="stylesheet" href="css.css">
@@ -24,8 +29,21 @@
 
 <body>
   <script>
-// don't think I'll need to code any info here butif I do then so be it.
+  // don't think I'll need to code any info here butif I do then so be it.
   </script>
+  <div id="audioController">
+    <h3>Audio Controller</h3>
+    <p id="nowPlaying">Nothing</p>
 
+    <button onclick="game.MusicPlay()" style="width: 45%">Play</button>
+    <button onclick="game.MusicPause()" style="width: 45%">Pause</button>
+    <br />
+    <button onclick="game.MusicPrev()" style="width: 45%">Prev</button>
+    <button onclick="game.MusicNext()" style="width: 45%">Next</button>
+    <br />
+    <button onclick="game.MusicVolumeDown()" style="width: 45%">Volume Down</button>
+    <button onclick="game.MusicVolumeUp()" style="width: 45%">Volume Up</button>
+  </div>
 </body>
+
 </html>

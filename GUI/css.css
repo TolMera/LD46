@@ -1,5 +1,9 @@
+body {
+	font-family: 'Didact Gothic';
+}
+
 h1 {
-	font-size: 3em;
+	font-size: 2em;
 }
 
 @keyframes mymove {
@@ -12,4 +16,20 @@ h1 {
 	100% {
 		background-position-y: -10%;
 	}
+}
+
+#audioController {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	width: 8cm;
+	text-align: center;
+}
+
+#audioController > button {
+	background-color: RGBA(25,25,25,0.75);
+	border: 3px solid goldenrod;
+	color: goldenrod;
 }
