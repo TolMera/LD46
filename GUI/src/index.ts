@@ -14,6 +14,17 @@ class game {
 	// Player status information
 	docked: boolean = true;
 	soundElem: any;
+	resource: any;
+	shipView: NodeJS.Timeout;
+	shipCompas: NodeJS.Timeout;
+	navTarget: any;
+
+	ship: any = {
+		rotation: 0,
+		velocity: 0,
+	};
+	shipDockingTimer: NodeJS.Timeout;
+
 	constructor() {
 		console.log("Starting Game Constructor");
 
@@ -23,6 +34,11 @@ class game {
 			// server: "ld46-792073873.ap-southeast-2.elb.amazonaws.com"
 			server: "127.0.0.1"
 		}
+
+		this.resource = {
+			myShip: "Art/ship1.png",
+			arrow: "Art/arrow.png",
+		};
 
 		this.planets = {
 			sun: {
@@ -585,10 +601,36 @@ class game {
 			});
 		}
 	}
+	
+	async startDockingLoop() {
+		this.shipDockingTimer = setInterval(this.testDocking.bind(this), 2000);
+	}
+	
+	async testDocking() {
+		for (let planet in this.planets) {
+			let distance = this.distanctCalc(planet);
+			if (700 > Number(distance)) {
+				this.dock(planet);
+			}
+		}
+	}
 
 	async dock(planet) {
 		console.log("57ee2de1-e180-5e52-bf35-3f157c0d49c6");
 		$('#menu').remove();
+		$('#shipBox').remove();
+		if (this.shipView) {
+			clearInterval(this.shipView);
+			this.shipView = undefined;
+		}
+		if (this.shipCompas) {
+			clearInterval(this.shipCompas);
+			this.shipCompas = undefined;
+		}
+		if (this.shipDockingTimer) {
+			clearInterval(this.shipDockingTimer);
+			this.shipDockingTimer = undefined;
+		}
 
 		// Play some landing sound here, and the unique sounds for this nation.
 
@@ -604,6 +646,148 @@ class game {
 	async launch() {
 		// Spawn a ship and get this captain out into space!
 		this.docked = false;
+		
+		this.ship.velocity = 0;
+
+
+		$('#menu').remove();
+		$('#gameMap').append($.parseHTML(`<div id="shipBox">
+			<div id="arrow"></div>
+			<div id="myShip"></div>
+		</div>`));
+		$('#shipBox').css($('#' + this.zoomTo).css(["position", "top", "left"]));
+
+		$('#myShip').css({
+			position: "realative",
+			top: "0px",
+			left: "0px",
+			"z-index": 1,
+			"background-image": `url(${this.resource.myShip})`,
+			height: "87px",
+			width: "297px",
+		});
+
+		this.zoomTo = "myShip";
+
+		this.shipView = setInterval(() => {
+			this.focusShip();
+		}, 1000 / 20);
+		this.focusShip();
+
+		this.shipCompas = setInterval(() => {
+			this.showVectorToPlanet();
+		}, 1000/30);
+		this.showVectorToPlanet();
+
+		$(window).on('keydown', this.keyboard.bind(this));
+		
+		setTimeout(() => {
+			this.startDockingLoop();
+		}, 10000);
+	}
+
+	async keyboard(event) {
+		console.log(event.key);
+		switch (event.key) {
+			case "ArrowUp": {
+				console.log("ArrowUp");
+				this.ship.velocity++;
+				// Ship should accellerate
+				break;
+			}
+			case "ArrowDown": {
+				console.log("ArrowDown");
+				this.ship.velocity--;
+				// Ship should Decellerate
+				break;
+			}
+			case "ArrowLeft": {
+				console.log("ArrowLeft");
+				// Ship sould rotate left
+				this.ship.rotation = (this.ship.rotation - 1) % 360;
+				break;
+			}
+			case "ArrowRight": {
+				console.log("ArrowRight");
+				// Ship should rotate right
+				this.ship.rotation = (this.ship.rotation + 1) % 360;
+				break;
+			}
+		}
+		console.log(this.ship);
+	}
+
+	async focusShip() {
+		let shipBox: any = $('#shipBox').css(["height", "width", "top", "left"]);
+		for (let key in shipBox) {
+			shipBox[key] = Number(shipBox[key].replace(/[a-z]/gi, ''));
+		}
+		
+		let angle = ((Math.PI / 180) * (this.ship.rotation)) % 360;
+
+		$('#myShip').css({
+			transform: `rotate(${this.ship.rotation}deg)`
+		});
+		
+		$('#shipBox').css({
+			top: `${shipBox.top + (Math.cos(angle) * ((this.ship.velocity)))}px`,
+			left: `${shipBox.left + (Math.sin(angle) * ((this.ship.velocity)))}px`,
+		});
+
+		let stats: any = this.measure();
+		$('#gameMap').css({
+			top: `-${shipBox.top - ((stats.height * 50) - (shipBox.height / 2))}px`,
+			left: `-${shipBox.left - ((stats.width * 50) - (shipBox.width / 2))}px`,
+		});
+	}
+
+	async showVectorToPlanet() {
+		if (!this.navTarget) {
+			// Always nav to earth if nothing else is selected.
+			this.navTarget = "earth";
+		}
+
+		let dest: any = $(`#${this.navTarget}`).css(["top", "left"]);
+		for (let key in dest) { dest[key] = Number(dest[key].replace(/[a-z]/gi, '')); }
+		let ship: any = $('#shipBox').css(["top", "left"]);
+		for (let key in ship) { ship[key] = Number(ship[key].replace(/[a-z]/gi, '')); }
+
+		var angleDeg = Math.atan2(dest.top - ship.top, dest.left - ship.left) * 180 / Math.PI;
+
+		$('#arrow').css({
+			position: "relative",
+			top: "0px",
+			left: "0px",
+			"z-index": 2,
+			transform: `rotate(${angleDeg}deg)`,
+			"background-image": `url(${this.resource.arrow})`,
+			width: "486px",
+			height: "78px",
+		});
+		
+		this.updateNavigation();
+	}
+
+	// Get the pointer for where the player wants to go.
+	async navigate(planet) {
+		this.navTarget = planet;
+		$('#destination').text("Going to: " + planet.toUpperCase());
+	}
+	
+	async updateNavigation() {
+		for (let planet in this.planets) {
+			let distance = this.distanctCalc(planet);
+			$('#' + planet + 'Nav').text(`${planet.toLocaleUpperCase()} ${distance}`);
+		}
+	}
+
+	distanctCalc(planet) {
+		let dest: any = $(`#${planet}`).css(["top", "left"]);
+		for (let key in dest) { dest[key] = Number(dest[key].replace(/[a-z]/gi, '')); }
+		let ship: any = $('#shipBox').css(["top", "left"]);
+		for (let key in ship) { ship[key] = Number(ship[key].replace(/[a-z]/gi, '')); }
+		
+		return Math.sqrt(((dest.top - ship.top) ** 2) + ((dest.left - ship.left) ** 2)).toFixed(0);
 	}
 
 	async planetMenu(planet) {

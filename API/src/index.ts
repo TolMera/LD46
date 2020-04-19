@@ -57,6 +57,13 @@ for (let file of ["BeepBoxSong1.mp3", "BeepBoxSong2.mp3", "BeepBoxSong3.mp3", "B
 	});
 }
 
+for (let file of ["ship1.png", "arrow.png"]) {
+	express.get(`/Art/${file}`, function (request, response) {
+		console.log(request)
+		response.sendFile(PATH.join(__dirname + `/../../GUI/Art/${file}`));
+	});
+}
+
 express.get('/login', function (request, response) {
 	console.log(request.query);
 	let isNew = true;

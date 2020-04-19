@@ -28,6 +28,7 @@
 </head>
 
 <body>
+  
   <script>
   // don't think I'll need to code any info here butif I do then so be it.
   </script>
@@ -43,6 +44,21 @@
     <br />
     <button onclick="game.MusicVolumeDown()" style="width: 45%">Volume Down</button>
     <button onclick="game.MusicVolumeUp()" style="width: 45%">Volume Up</button>
+  </div>
+  
+  <div id="navigation">
+    <h3>Navigation</h3>
+    <p id="destination">Select your Destination</p>
+    <ul>
+      <li id="mercuryNav" onclick="game.navigate('mercury')">Mercury</li>
+      <li id="venusNav" onclick="game.navigate('venus')">Venus</li>
+      <li id="earthNav" onclick="game.navigate('earth')">Earth</li>
+      <li id="marsNav" onclick="game.navigate('mars')">Mars</li>
+      <li id="jupiterNav" onclick="game.navigate('jupiter')">Jupiter</li>
+      <li id="saturnNav" onclick="game.navigate('saturn')">Saturn</li>
+      <li id="uranusNav" onclick="game.navigate('uranus')">Uranus</li>
+      <li id="neptuneNav" onclick="game.navigate('neptune')">Neptune</li>
+    </ul>
   </div>
 </body>
 
