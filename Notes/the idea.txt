@@ -1,0 +1,82 @@
+Idea
+
+There is a colony that has been started on another solar body, the player is able to select where they would like to start.
+
+If the player does not want to play a city builder, they can chose to be a space fairer, and ferry goods from any station willing to sell something, to another (multiplayer)
+
+You will have
+1) A City Builder
+	You're building the settlement on the planet/place of your choosing.
+2) A Space fairing game - something with mission choices and obstacle avoidance
+	Minor resource balance game because you have to make sure you have enough fuel to get from A to B
+
+Trade should only take place between the trade game and the main city on each solar body
+	Other cities on the solar body can import/export form the main city.
+	The main city is chosen based on the number of people living there, and how wealthy the place is.
+	
+Start screen will be something like a map of the solar system giving you information about all of the different solar bodies, and some game stats such as how many cities there are already there.
+
+You'll have to chose your course of action, either you are going to be a space fairer, or you're going to be a govonour
+
+when a new city is started, it will take part of the population from the capital city (start with like 10 people).
+	You can pay to import more people from the capital
+
+The Capital city can religh on birth-rate, or it can put out an offer to the captains, asking for them to bring immigrants.
+
+
+
+
+
+
+
+Things I need
+A map of the surface of multiple solar bodies.
+Art for the city building
+Art for the Spaceships and things in space that you're going to run into
+
+The solar system map
+The planet map
+
+
+
+
+Where should I start:
+The multiplayer aspect of the game is going to come from the captains who will fly between places, and maybe fly with other captains (fleet) from time to time or Rescue a stranded captain.
+
+Networking we will need is going to be Chat (Voice?) - Real time
+
+
+Loading screen should have a map of all of the planets in some kind of orbit (space reduced so people can see everything)
+When players are planning to fly from one planet to another, they will need a map that shows the current position of each planet, and how long (how much fuel and time) it's going to take to fly to each place.
+
+Gov's will need the ability to place an order to the open market
+Captains will need to be able to open the open market, and see all the offers currently standing.
+They will need to be able to see if someone else is already on their way to fill an order (and snipe if they can arrive sooner).
+Gov's will need to be able to see how soon an order is going to be filled.
+
+Different planets should have different things that are abundant.
+Most planets have no Water or Oxygen.
+The earth has both
+The moon has easy access to some metals and is cheap to launch from
+Mars has lots of iron
+Venus has lots of gas and acid chemicals.
+
+If I allow players to be pirates, then I should also create a bounty system, so it becomes profitable to hunt them down and kill them
+If a player accepts a county on someone, I should nerf the pirate and the player so the pirate loses, and the player wins
+
+I should have some degree of drag and drop ship building
+
+
+API:
+Open Market CRUD
+Chat CRU
+Login - CRU
+Ships - CRUD
+Space - CRUD
+Solar System Map - CRUD
+
+Ship Build - CRUD
+
+When someone sends an update, I really think it should go straight to SQS
+Sending data to playes should also go via SQS
+

@@ -1,0 +1,171 @@
+html {
+	zoom: 100%;
+}
+
+body {
+	font-family: 'Didact Gothic';
+}
+
+h1 {
+	font-size: 2em;
+}
+
+button {
+	border: 3px solid goldenrod;
+	background-color: rgba(25, 25, 25, 0.75);
+	
+	margin: 2px 2px;
+
+	text-align: center;
+	/* font-size: 1em; */
+	color: goldenrod;
+}
+
+@keyframes mymove {
+	0% {
+		background-position-y: -10%;
+	}
+	50% {
+		background-position-y: 10%;
+	}
+	100% {
+		background-position-y: -10%;
+	}
+}
+
+#audioController {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	width: 8cm;
+	text-align: center;
+}
+
+#audioController > button {
+	background-color: RGBA(25,25,25,0.75);
+	border: 3px solid goldenrod;
+	color: goldenrod;
+}
+
+#shipInfo {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	width: 6cm;
+}
+
+#shipInfo > ul {
+	list-style-type: none;
+}
+
+#navigation {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	width: 8cm;
+	text-align: center;
+}
+
+#navigation > ul {
+	list-style-type: none;
+	margin-left: -40px;
+	cursor: pointer;
+}
+
+
+.chatter {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	width: 8cm;
+	height: 8cm;
+	text-align: left;
+}
+
+.chatBox {
+	width: 98%;
+	height: 5.5cm;
+	border: 2px solid gold;
+	color: goldenrod;
+	text-align: left;
+}
+
+.chatIn {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	border: 2px solid gold;
+	color: goldenrod;
+	text-align: left;
+	background-color: RGBA(25,25,25,0.0);
+	
+	width: 75%;
+}
+
+.chatSend {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	
+	margin: 0px 0px;
+	
+	border: 2px solid gold;
+	color: goldenrod;
+	text-align: left;
+	background-color: RGBA(25,25,25,0);
+	
+	width: 23%;
+}
+
+.percent {
+	background-color: black;
+	width: 50%;
+	height: 1.25em;
+	padding: 0px 0px;
+	margin: 0px 0px;
+	border: 2px solid darkgoldenrod;
+	display: inline-block;
+}
+.percentGreen {
+	background-color: goldenrod;
+	padding: 0px 0px;
+	margin: 0px 0px;
+	height: 100%;
+}
+
+.factory {
+	height: 30vh;
+	display: inline-block;
+	
+	margin: 0px auto;
+	
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	
+	text-align: left;
+	top: 0px;
+}
+
+.shrink {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+.credits {
+	position: absolute;
+	top: 3px;
+	right: 3px;
+	background-color: RGBA(25,25,25,0.75);
+	border: 2px solid goldenrod;
+	font-size: 1.5em;
+	font-weight: bolder;
+}

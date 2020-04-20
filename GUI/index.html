@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+
+  <title>Elon-zo</title>
+  <meta name="description" content="A space trade and planet colonization game">
+  <meta name="author" content="(c) Bjorn Macintosh 2020">
+
+  <link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'>
+
+  <!-- JQUERY -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"
+    integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+
+  <!-- Notify - a sub package of JQUERY -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"
+    integrity="sha256-tSRROoGfGWTveRpDHFiWVz+UXt+xKNe90wwGn25lpw8=" crossorigin="anonymous"></script>
+
+  <!-- The actual game -->
+  <script src="bundle.js"></script>
+
+  <!-- Styling - I'm going to do that via JS -->
+  <link rel="stylesheet" href="css.css">
+
+</head>
+
+<body>
+
+  <script>
+  // don't think I'll need to code any info here butif I do then so be it.
+  </script>
+  <div style="z-index: 10;" id="audioController">
+    <h3>Audio Controller</h3>
+    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
+    <p id="nowPlaying">Nothing</p>
+
+    <button onclick="game.MusicPlay()" style="width: 45%">Play</button>
+    <button onclick="game.MusicPause()" style="width: 45%">Pause</button>
+    <br />
+    <button onclick="game.MusicPrev()" style="width: 45%">Prev</button>
+    <button onclick="game.MusicNext()" style="width: 45%">Next</button>
+    <br />
+    <button onclick="game.MusicVolumeDown()" style="width: 45%">Volume Down</button>
+    <button onclick="game.MusicVolumeUp()" style="width: 45%">Volume Up</button>
+  </div>
+
+  <div style="z-index: 10;" id="navigation">
+    <h3>Navigation</h3>
+    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
+    <p id="destination">Select your Destination</p>
+    <ul>
+      <li id="mercuryNav" onclick="game.navigate('mercury')">Mercury</li>
+      <li id="venusNav" onclick="game.navigate('venus')">Venus</li>
+      <li id="earthNav" onclick="game.navigate('earth')">Earth</li>
+      <li id="marsNav" onclick="game.navigate('mars')">Mars</li>
+      <li id="jupiterNav" onclick="game.navigate('jupiter')">Jupiter</li>
+      <li id="saturnNav" onclick="game.navigate('saturn')">Saturn</li>
+      <li id="uranusNav" onclick="game.navigate('uranus')">Uranus</li>
+      <li id="neptuneNav" onclick="game.navigate('neptune')">Neptune</li>
+    </ul>
+  </div>
+
+  <div style="z-index: 10;" id="shipInfo">
+    <h3>Ship Info</h3>
+    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
+    <ul>
+      <li id="rotation"></li>
+      <li id="velocity"></li>
+      <li id="wealth"></li>
+      <li id="fuel"></li>
+      <li id="mass"></li>
+      <li id="cargoCap"></li>
+      <li id="cargoNow"></li>
+    </ul>
+  </div>
+
+  <div style="z-index: 10;" class="chatter">
+    <h3>Chat</h3>
+    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
+    <div class="chatBox">
+
+    </div>
+    <input type="text" class="chatIn" /><button class="chatSend" onclick="game.chatSend()">Send</button>
+  </div>
+</body>
+
+</html>

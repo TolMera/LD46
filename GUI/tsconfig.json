@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": { "*": ["types/*"] },
+        "module": "es6",
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "rootDir": "src",
+        "outDir": "build",
+        "target": "ES2020",
+        "types" : ["chrome", "window-or-global", "uniq", "jquery"]
+    },
+    "exclude": [
+        "node_modules",
+        "ignore",
+        "scripts"
+    ]
+}

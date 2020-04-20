@@ -1,0 +1,32 @@
+{
+  "name": "elon-zo-gui",
+  "version": "1.0.0",
+  "description": "A game for LD46",
+  "main": "index.js",
+  "dependencies": {
+    "@types/chrome": "0.0.104",
+    "@types/notifyjs": "^3.0.1",
+    "@types/window-or-global": "^1.0.1",
+    "big-number": "^2.0.0",
+    "uniq": "^1.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "@types/jquery": "^3.3.35",
+    "@types/uniq": "0.0.27",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.1",
+    "es2015": "0.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "game",
+    "LudumDare"
+  ],
+  "author": "Bjorn Macintosh",
+  "license": "ISC"
+}
