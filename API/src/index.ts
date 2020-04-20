@@ -5,12 +5,30 @@
 
 
 const planets = {
-	mercury: { wealth: 0, population: 1000 / 10 },
-	venus: { wealth: 0, population: 1000 / 10 },
-	earth: { wealth: 0, population: 7600000000 / 10 },
-	mars: { wealth: 0, population: 1000 / 10 },
-	uranus: { wealth: 0, population: 1000 / 10 },
-	neptune: { wealth: 0, population: 1000 / 10 },
+	mercury: {
+		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		players: {}
+	},
+	venus: {
+		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		players: {}
+	},
+	earth: {
+		wealth: 0, population: 7600000000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		players: {}
+	},
+	mars: {
+		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		players: {}
+	},
+	uranus: {
+		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		players: {}
+	},
+	neptune: {
+		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		players: {}
+	},
 }
 const users = [];
 const orders: Array<{ to: string, type: string, quantity: number, price: number }> = [
@@ -177,7 +195,7 @@ setInterval(() => {
 	for (let planet in goods) {
 		// Earth should never die, it's got food, water and air and probably has meat, what I think is that there's also going to be now population growth from earth, just a static number
 		if (planet == "earth") continue;
-		
+
 		let deaths = false;
 		for (let item of goods[planet]) {
 			if ("Water (H2O)" == item.name) {
@@ -321,7 +339,7 @@ express.get('/chat', function (request, response) {
 
 express.get('/population', function (request, response) {
 	let planet = request.query.planet;
-	return response.send({ population: planets[planet].population });
+	return response.send({ planet: planets[planet] });
 });
 
 
@@ -356,7 +374,7 @@ express.post('/updatePosition', function (request, response) {
 		ship = ships[id];
 		// Don't tell me about myself.
 		if (ship.accId == accId) continue;
-		
+
 		let dist = Math.sqrt(((Number(me.position.top) - Number(ship.position.top)) ** 2) + ((Number(me.position.left) - Number(ship.position.left)) ** 2)).toFixed(0);
 		// Notify if a ship is within 5K radius
 		// !CONFIG
@@ -506,6 +524,34 @@ express.post('/upgradeShip', function (request, response) {
 			response.send({ message: "Insufficient Wealth" });
 		}
 	}
+});
+
+express.post('/updateCity', function (request, response) {
+	let accId = request.body.acctd;
+	let planet = request.body.planet;
+	let city = request.body.city;
+
+	planet = planets[planet];
+
+	if (undefined == planet.players[accId]) {
+		planet.players[accId] = city;
+	}
+
+	planet.air -= planet.players[accId].goods[0].stock;
+	planet.population -= planet.players[accId].goods[4].stock;
+	planet.protine -= planet.players[accId].goods[3].stock;
+	planet.sugars -= planet.players[accId].goods[5].stock;
+	planet.water -= planet.players[accId].goods[7].stock;
+	planet.wealth -= planet.players[accId].wealth;
+
+	planet.players[accId] = city;
+
+	planet.players[accId].goods[0].stock += city.goods[0].stock;
+	planet.players[accId].goods[4].stock += city.goods[4].stock;
+	planet.players[accId].goods[3].stock += city.goods[3].stock;
+	planet.players[accId].goods[5].stock += city.goods[5].stock;
+	planet.players[accId].goods[7].stock += city.goods[7].stock;
+	planet.players[accId].wealth += city.wealth;
 });
 
 const port = 80;

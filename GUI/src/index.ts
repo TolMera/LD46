@@ -19,6 +19,29 @@ class game {
 	shipCompas: NodeJS.Timeout;
 	navTarget: any;
 
+	planet: any = {
+		wealth: 0,
+		goods: [
+			{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
+			{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 100 },
+			{ name: "Liquid Methan (CH4)", mass: 424, price: 0, stock: 10000 },
+			{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
+			{ name: "People", mass: 1500, price: 20, stock: 1000 / 10 },
+			{ name: "Sugars (C6H12O6)", mass: 2000, price: 2, stock: 0 },
+			{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 0 },
+			{ name: "Water (H2O)", mass: 1000, price: 40, stock: 100 },
+		],
+		buildings: {
+			water: { level: 0 },
+			air: { level: 0 },
+			acid: { level: 0 },
+			iron: { level: 0 },
+			methane: { level: 0 },
+			protine: { level: 0 },
+			sugar: { level: 0 },
+		}
+	}
+
 	ship: any = {
 		rotation: 0,
 		velocity: 0,
@@ -53,12 +76,13 @@ class game {
 	chatMessages = [];
 	updateServerInterval: number = 10;
 	navUpdateTimer: number = 10000;
+	career: string;
 
 	MathAccelleration(force, mass) { return force / mass }
 	MathMass(acceleration, force) { return force / acceleration }
 	MathForce(acceleration, mass) { return acceleration * mass }
 
-	goodsLookup = {
+	goodsLookup: any = {
 		"Iron (Fe)": { name: "Iron (Fe)", mass: 7873 },
 		"Liquid Methan (CH4)": { name: "Liquid Methan (CH4)", mass: 424, stock: 10000, energy: 5888, force: 600480 },
 		"Sulphuric Acid (H2SO4)": { name: "Sulphuric Acid (H2SO4)", mass: 1826 },
@@ -67,6 +91,27 @@ class game {
 		"People": { name: "People", mass: 1500 },
 		"Proteins": { name: "Proteins", mass: 3500 },
 		"Sugars (C6H12O6)": { name: "Sugars (C6H12O6)", mass: 2000 },
+	}
+
+	planetLookup: any = {
+		mercury: {
+			factories: ["air", "iron", "methane", "protine", "sugar"]
+		},
+		venus: {
+			factories: ["water", "air", "acid", "methane"]
+		},
+		earth: {
+			factories: ["water", "air", "acid", "iron", "methane", "protine", "sugar"]
+		},
+		mars: {
+			factories: ["air", "iron", "methane", "sugar"]
+		},
+		uranus: {
+			factories: ["water", "air", "acid", "methane"]
+		},
+		neptune: {
+			factories: ["water", "air", "acid", "methane"]
+		},
 	}
 
 	constructor() {
@@ -213,9 +258,6 @@ class game {
 				$('#cargoCap').text(`Cargo max: ${this.ship.capacity.toFixed(2)}`);
 				$('#cargoNow').text(`Cargo Space: ${this.getCargoNow().toFixed(2)}`);
 			}, 1000);
-
-			// Send a position update to the server every second (when flying);
-			setInterval(this.updateServer.bind(this), 1000 / this.updateServerInterval);
 		}
 
 		chat: {
@@ -678,12 +720,20 @@ class game {
 			this.zoom = this.planets[planet].zoom
 		}
 
+		$('#navigation').remove();
+		$('#shipInfo').remove();
+
 		this.settlementMenu(planet);
+
+		this.career = "Governor";
+		setInterval(() => {
+			this.updateServer();
+		}, 5000);
 	}
-	
+
 	async settlementMenu(planet) {
 		let menu = this.createMenu();
-		
+
 		// View the terrain, and cover the entire screen, the player is no longer in space.
 		$('#menu').css({
 			"background-image": `url("${this.planets[planet].texture}")`,
@@ -694,6 +744,16 @@ class game {
 
 			width: "100%",
 			height: "100%",
+
+			position: "relative",
+			margin: "0px 0px",
+			padding: "3px 3px",
+			top: "0px",
+			left: "0px",
+
+			// Text and content
+			"align-items": "center",
+			color: "goldenrod",
 		});
 
 		createHeading: {
@@ -703,11 +763,27 @@ class game {
 			$('#heading').text(planet.toUpperCase()).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 
 			let p = document.createElement('p');
-			p.setAttribute("id", "population")
+			p.setAttribute("id", "planetDetails")
 			menu.append(p);
-			console.log(planet);
+			setInterval(() => {
+				this.getPopulation(planet).then((data: any) => {
+					$('#planetDetails').text(`Planet Details: [Population: ${data.planet.population}] ---- [Water: ${data.planet.water}] ---- [Air: ${data.planet.air}] ---- [Sugars: ${data.planet.sugars}] ---- [Protine: ${data.planet.protine}]`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+				});
+			}, 30 * 1000);
 			this.getPopulation(planet).then((data: any) => {
-				$('#population').text(`Population: ${data.population}`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+				$('#planetDetails').text(`Planet Details: [Population: ${data.planet.population}] ---- [Water: ${data.planet.water}] ---- [Air: ${data.planet.air}] ---- [Sugars: ${data.planet.sugars}] ---- [Protine: ${data.planet.protine}]`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+			});
+
+			p = document.createElement('p');
+			p.setAttribute("id", "cityDetails")
+			menu.append(p);
+			setInterval(() => {
+				this.getPopulation(planet).then((data: any) => {
+					$('#cityDetails').text(`City Details: [Population: ${data.planet.population}] ---- [Water: ${data.planet.water}] ---- [Air: ${data.planet.air}] ---- [Sugars: ${data.planet.sugars}] ---- [Protine: ${data.planet.protine}]`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+				});
+			}, 30 * 1000);
+			this.getPopulation(planet).then((data: any) => {
+				$('#cityDetails').text(`City Details: [Population: ${data.planet.population}] ---- [Water: ${data.planet.water}] ---- [Air: ${data.planet.air}] ---- [Sugars: ${data.planet.sugars}] ---- [Protine: ${data.planet.protine}]`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 			});
 
 			p = document.createElement('p');
@@ -716,56 +792,116 @@ class game {
 			$('#paragraph').text(this.planets[planet].flavorText).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 		}
 
-		// Display the orders screen
-		showOrders: {
-			let button = document.createElement('button');
-			button.setAttribute("id", "showOrders");
-			button.setAttribute('onclick', 'game.showOrders()');
-			menu.append(button);
-
-			let buttonLive = $('#showOrders');
-			buttonLive.text("Show Orders");
-			buttonLive.css({
-				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
-
-				height: "1cm",
-				width: "100%",
-				margin: "3px 0px",
-
-				"text-align": "center",
-				"font-size": "1.5em",
-				color: "goldenrod"
-			});
+		showFactoryIcons: {
+			menu.append($.parseHTML(`
+				<div>
+					${(this.planetLookup[this.zoomTo].factories.includes("water") ? `
+					<div class="factory" id="factoryWater" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
+						<p>Produce Water at this factory - requires: A world with water</p>
+						<button onclick="game.levelDown('Water')">Level Down (${/* TODO */ true == true} credits)</button>
+						<p name="level">Level 0</p>
+						<button onclick="game.levelUp('Water')">Level Up (${/* TODO */ true == true} credits)</button>
+					</div>` : '')}
+					${(this.planetLookup[this.zoomTo].factories.includes("air") ? `
+					<div class="factory" id="factoryAir" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
+						<p>Produce Air at this factory - requires: A world with an Oxygen rich atmosphere or Water and Energy</p>
+						<button onclick="game.levelDown('Air')">Level Down (${/* TODO */ true == true} credits)</button>
+						<p name="level">Level 0</p>
+						<button onclick="game.levelUp('Air')">Level Up (${/* TODO */ true == true} credits)</button>
+					</div>` : '')}
+					${(this.planetLookup[this.zoomTo].factories.includes("acid") ? `
+					<div class="factory" id="factoryAcid" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
+						<p>Produce Acid at this factory - requires: A world with Atmosphere (prefereably acidic)</p>
+						<button onclick="game.levelDown('Acid')">Level Down (${/* TODO */ true == true} credits)</button>
+						<p name="level">Level 0</p>
+						<button onclick="game.levelUp('Acid')">Level Up (${/* TODO */ true == true} credits)</button>
+					</div>` : '')}
+					${(this.planetLookup[this.zoomTo].factories.includes("iron") ? `
+					<div class="factory" id="factoryIron" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
+						<p>Produce Iron at this factory - requires: A world with abundant metal in the crust (that is accessible)</p>
+						<button onclick="game.levelDown('Iron')">Level Down (${/* TODO */ true == true} credits)</button>
+						<p name="level">Level 0</p>
+						<button onclick="game.levelUp('Iron')">Level Up (${/* TODO */ true == true} credits)</button>
+					</div>` : '')}
+					${(this.planetLookup[this.zoomTo].factories.includes("methane") ? `
+					<div class="factory" id="factoryMethane" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
+					<p>Produce Methane at this factory - requires: Water + Air + Energy</p>
+					<button onclick="game.levelDown('Methane')">Level Down (${/* TODO */ true == true} credits)</button>
+					<p name="level">Level 0</p>
+					<button onclick="game.levelUp('Methane')">Level Up (${/* TODO */ true == true} credits)</button>
+					</div>` : '')}
+					${(this.planetLookup[this.zoomTo].factories.includes("protine") ? `
+					<div class="factory" id="factoryProtine" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
+						<p>Produce Protine at this factory - requires: Sugar + Air + Water</p>
+						<button onclick="game.levelDown('Protine')">Level Down (${/* TODO */ true == true} credits)</button>
+						<p name="level">Level 0</p>
+						<button onclick="game.levelUp('Protine')">Level Up (${/* TODO */ true == true} credits)</button>
+					</div>` : '')}
+					${(this.planetLookup[this.zoomTo].factories.includes("sugar") ? `
+					<div class="factory" id="factorySugar" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
+						<p>Produce Sugar at this factory - requires: Energy + Ait + Sugar</p>
+						<button onclick="game.levelDown('Sugar')">Level Down (${/* TODO */ true == true} credits)</button>
+						<p name="level">Level 0</p>
+						<button onclick="game.levelUp('Sugar')">Level Up (${/* TODO */ true == true} credits)</button>
+					</div>` : '')}
+				</div>
+			`));
 		}
 
-		// Puchase some goods to take to the next colony
-		buyGoods: {
-			let button = document.createElement('button');
-			button.setAttribute("id", "buyGoodsView");
-			button.setAttribute('onclick', `game.buyGoodsView("${planet}")`);
-			menu.append(button);
+		// // Display the orders screen
+		// showOrders: {
+		// 	let button = document.createElement('button');
+		// 	button.setAttribute("id", "showOrders");
+		// 	button.setAttribute('onclick', 'game.showOrders()');
+		// 	menu.append(button);
 
-			let buttonLive = $('#buyGoodsView');
-			buttonLive.text("Buy Goods");
-			buttonLive.css({
-				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
+		// 	let buttonLive = $('#showOrders');
+		// 	buttonLive.text("Show Orders");
+		// 	buttonLive.css({
+		// 		border: "3px solid goldenrod",
+		// 		"background-color": "RGBA(25, 25, 25, 0.75)",
 
-				height: "1cm",
-				width: "100%",
-				margin: "3px 0px",
+		// 		height: "1cm",
+		// 		width: "100%",
+		// 		margin: "3px 0px",
 
-				"text-align": "center",
-				"font-size": "1.5em",
-				color: "goldenrod"
-			});
-		}
+		// 		"text-align": "center",
+		// 		"font-size": "1.5em",
+		// 		color: "goldenrod"
+		// 	});
+		// }
+
+		// // Puchase some goods to take to the next colony
+		// buyGoods: {
+		// 	let button = document.createElement('button');
+		// 	button.setAttribute("id", "buyGoodsView");
+		// 	button.setAttribute('onclick', `game.buyGoodsView("${planet}")`);
+		// 	menu.append(button);
+
+		// 	let buttonLive = $('#buyGoodsView');
+		// 	buttonLive.text("Buy Goods");
+		// 	buttonLive.css({
+		// 		border: "3px solid goldenrod",
+		// 		"background-color": "RGBA(25, 25, 25, 0.75)",
+
+		// 		height: "1cm",
+		// 		width: "100%",
+		// 		margin: "3px 0px",
+
+		// 		"text-align": "center",
+		// 		"font-size": "1.5em",
+		// 		color: "goldenrod"
+		// 	});
+		// }
 	}
 
 	async startCaptain() {
 		console.log("b31b1d42-d736-5e5d-a6bc-6b030362efd4");
+		this.career = "Captain";
 		$('#menu').remove();
+		
+		// Send a position update to the server every second (when flying);
+		setInterval(this.updateServer.bind(this), 1000 / this.updateServerInterval);
 
 		// Would be really good to introduce some sound with this.  Like a Trill, and a bit of base.
 
@@ -1035,6 +1171,22 @@ class game {
 	}
 
 	async updateServer() {
+		if ("Captain" == this.career) {
+			this.updateCaptain();
+		} else if ("Governor" == this.career) {
+			this.updateGovernor();
+		}
+	}
+
+	async updateGovernor() {
+		let prom = new Promise((resolve, reject) => {
+			$.post('/updateCity', { accId: this.accountName, planet: this.zoomTo, city: this.planet }, resolve);
+		});
+
+		return prom;
+	}
+
+	async updateCaptain() {
 		if ($('#shipBox').length) {
 			let shipBox: any = $('#shipBox').css(["height", "width", "top", "left"]);
 			for (let key in shipBox) {

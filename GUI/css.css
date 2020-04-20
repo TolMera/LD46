@@ -136,3 +136,16 @@ button {
 	margin: 0px 0px;
 	height: 100%;
 }
+
+.factory {
+	height: 30vh;
+	display: inline-block;
+	
+	margin: 0px auto;
+	
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	
+	text-align: left;
+	top: 0px;
+}
