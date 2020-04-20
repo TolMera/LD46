@@ -6,7 +6,7 @@
 
 const planets = {
 	mercury: {
-		wealth: 5000,
+		wealth: 500000,
 		air: 0,
 		iron: 0,
 		methane: 0,
@@ -18,7 +18,7 @@ const planets = {
 		players: {}
 	},
 	venus: {
-		wealth: 10000,
+		wealth: 1000000,
 		air: 0,
 		iron: 0,
 		methane: 0,
@@ -30,7 +30,7 @@ const planets = {
 		players: {}
 	},
 	earth: {
-		wealth: 15000,
+		wealth: 1500000,
 		air: 0,
 		iron: 0,
 		methane: 0,
@@ -42,7 +42,7 @@ const planets = {
 		players: {}
 	},
 	mars: {
-		wealth: 20000,
+		wealth: 2000000,
 		air: 0,
 		iron: 0,
 		methane: 0,
@@ -54,7 +54,7 @@ const planets = {
 		players: {}
 	},
 	uranus: {
-		wealth: 30000,
+		wealth: 3000000,
 		air: 0,
 		iron: 0,
 		methane: 0,
@@ -66,7 +66,7 @@ const planets = {
 		players: {}
 	},
 	neptune: {
-		wealth: 40000,
+		wealth: 4000000,
 		air: 0,
 		iron: 0,
 		methane: 0,
@@ -86,7 +86,7 @@ const orders: Array<{ to: string, type: string, quantity: number, price: number 
 let EXPRESS = require('express');
 let CORS = require('cors');
 let COMPRESSION = require('compression');
-let PATH = require('path');;
+let PATH = require('path');
 const BODYPARSER = require('body-parser');
 
 const express = EXPRESS();
@@ -181,66 +181,66 @@ const goods = {
 		// mercury: ["air", "iron", "methane", "protine", "sugar"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 100 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 30, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
 		{ name: "People", mass: 1500, price: 20, stock: planets["mercury"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 2, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 0 },
+		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
 		{ name: "Water (H2O)", mass: 1000, price: 40, stock: 100 },
 	],
 	venus: [
 		// venus: ["water", "air", "acid", "methane"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 3, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 1, stock: 0 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 20, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
 		{ name: "People", mass: 1500, price: 10, stock: planets["venus"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 5, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 1000 },
+		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 1000 },
 		{ name: "Water (H2O)", mass: 1000, price: 5, stock: 100 },
 	],
 	earth: [
 		// earth: ["water", "air", "acid", "iron", "methane", "protine", "sugar"],
-		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 0, stock: 10000 },
+		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 1, stock: 10000 },
 		{ name: "Iron (Fe)", mass: 7873, price: 15, stock: 0 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 10, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 20, stock: 0 },
 		{ name: "People", mass: 1500, price: -10, stock: planets["earth"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 2, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 0 },
-		{ name: "Water (H2O)", mass: 1000, price: 0, stock: 10000 },
+		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
+		{ name: "Water (H2O)", mass: 1000, price: 1, stock: 10000 },
 	],
 	mars: [
 		// mars: ["air", "iron", "methane", "sugar"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 1000 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 10, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 20, stock: 0 },
 		{ name: "People", mass: 1500, price: 20, stock: planets["mars"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 1, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 0 },
+		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
 		{ name: "Water (H2O)", mass: 1000, price: 30, stock: 100 },
 	],
 	uranus: [
 		// uranus: ["water", "air", "acid", "methane"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 5, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 30, stock: 0 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 15, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
 		{ name: "People", mass: 1500, price: 40, stock: planets["uranus"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 10, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 0 },
+		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
 		{ name: "Water (H2O)", mass: 1000, price: 10, stock: 100 },
 	],
 	neptune: [
 		// neptune: ["water", "air", "acid", "methane"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 7, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 100, stock: 0 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 20, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 30, stock: 0 },
 		{ name: "People", mass: 1500, price: 50, stock: planets["neptune"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 15, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 0 },
+		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
 		{ name: "Water (H2O)", mass: 1000, price: 15, stock: 100 },
 	]
 }
@@ -363,7 +363,7 @@ express.post('/updatePosition', function (request, response) {
 		// Don't tell me about myself.
 		if (ship.accId == accId) continue;
 
-		let dist = Math.sqrt(((Number(me.position.top) - Number(ship.position.top)) ** 2) + ((Number(me.position.left) - Number(ship.position.left)) ** 2)).toFixed(0);
+		let dist = Number(Math.sqrt(((Number(me.position.top) - Number(ship.position.top)) ** 2) + ((Number(me.position.left) - Number(ship.position.left)) ** 2)).toFixed(0));
 		// Notify if a ship is within 5K radius
 		// !CONFIG
 		if (dist < 5000) {
@@ -431,7 +431,7 @@ function solarFlare() {
 				let evt = events[ship.accId];
 				evt.name = "solarFlare";
 				evt.message = "You have been hit by a Solar Flare, Cargo and Velocity may have been changed.";
-				evt.cargo = (Math.random() * 20).toFixed(0) / 100;
+				evt.cargo = Number((Math.random() * 20).toFixed(0)) / 100;
 				// evt.force = 
 			}
 		}
@@ -480,7 +480,7 @@ express.get('/getUpgradeList', function (request, response) {
 
 express.post('/upgradeShip', function (request, response) {
 	let level = Number(request.body.level);
-	let part = request.body.part;
+	// let part = request.body.part;
 	let quantity = Number(request.body.quantity);
 	let wealth = Number(request.body.wealth);
 	let planet = request.body.planet;
