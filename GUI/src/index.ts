@@ -22,8 +22,41 @@ class game {
 	ship: any = {
 		rotation: 0,
 		velocity: 0,
+		capacity: 200,
+		cargo: {
+			"Air (N2 + O2 + CO2)": { stock: 0 },
+			"Iron (Fe)": { stock: 0 },
+			"Liquid Methan (CH4)": { stock: 100 },
+			"Proteins": { stock: 0 },
+			"People": { stock: 0 },
+			"Sugars (C6H12O6)": { stock: 0 },
+			"Sulphuric Acid (H2SO4)": { stock: 0 },
+			"Water (H2O)": { stock: 0 },
+		},
+		// Starting mass of the ship... Just an arbitraru number at this point.
+		mass: 10 * 7873,
+		wealth: 100,
 	};
 	shipDockingTimer: NodeJS.Timeout;
+	accountName: string;
+
+	chatMessages = [];
+	updateServerInterval: number = 10;
+
+	MathAccelleration(force, mass) { return force / mass }
+	MathMass(acceleration, force) { return force / acceleration }
+	MathForce(acceleration, mass) { return acceleration * mass }
+
+	goodsLookup = {
+		"Iron (Fe)": { name: "Iron (Fe)", mass: 7873 },
+		"Liquid Methan (CH4)": { name: "Liquid Methan (CH4)", mass: 424, stock: 10000, energy: 5888, force: 600480 },
+		"Sulphuric Acid (H2SO4)": { name: "Sulphuric Acid (H2SO4)", mass: 1826 },
+		"Water (H2O)": { name: "Water (H2O)", mass: 1000 },
+		"Air (N2 + O2 + CO2)": { name: "Air (N2 + O2 + CO2)", mass: 870 },
+		"People": { name: "People", mass: 1500 },
+		"Proteins": { name: "Proteins", mass: 3500 },
+		"Sugars (C6H12O6)": { name: "Sugars (C6H12O6)", mass: 2000 },
+	}
 
 	constructor() {
 		console.log("Starting Game Constructor");
@@ -32,7 +65,8 @@ class game {
 
 		this.url = {
 			// server: "ld46-792073873.ap-southeast-2.elb.amazonaws.com"
-			server: "127.0.0.1"
+			server: "ec2-13-211-6-45.ap-southeast-2.compute.amazonaws.com"
+			// server: "127.0.0.1"
 		}
 
 		this.resource = {
@@ -51,7 +85,7 @@ class game {
 				img: `Planets/sphere/sun.png`,
 				texture: `Planets/Textures/sun.jpg`,
 				flavorText: "The Sun is well known for it's incredible HotPot.",
-				zoom: 20
+				zoom: 900
 			},
 			mercury: {
 				radius: 2439,
@@ -60,7 +94,7 @@ class game {
 				auRatio: 0.012,
 				img: `Planets/sphere/mercury.png`,
 				texture: `Planets/Textures/mercury.jpg`,
-				flavorText: "Mercury is a tiadally locked planet, meaning that one face is always to the sun, same as the Earths moon only ever shows one side to the earth. This has led to a unique growing environment for foods, which are cultivated in the sunset ring, on the edge of day and night.  An abundance of solar energe has made this world an exporter of all kinds of raw elements.  Especially Alumnimum which requires vast amounts of energy to refine.",
+				flavorText: "Mercury is in a tidal lock with the Sun, meaning that one face is always to the sun, same as the Earths moon only ever shows one side to the earth. This has led to a unique growing environment for foods, which are cultivated in the sunset ring, on the edge of day and night.  An abundance of solar energe has made this world an exporter of all kinds of raw elements.  Especially Alumnimum which requires vast amounts of energy to refine.",
 				zoom: 900
 			},
 			venus: {
@@ -101,7 +135,7 @@ class game {
 				img: `Planets/sphere/jupiter.png`,
 				texture: `Planets/Textures/jupiter.jpg`,
 				flavorText: "Jupiter is a Gas Giant, it's impossible to land here, but science and humanity have taken great interest in Jupiter.  Space stations orbit this Gas Giant conductin all manner of research, with stellar views and a long journey for investigators and journalists, Jupiter is the perfect place for Labs to experiment with the more 'unusual' sciences.",
-				zoom: 100
+				zoom: 900
 			},
 			saturn: {
 				radius: 60268,
@@ -111,7 +145,7 @@ class game {
 				img: `Planets/sphere/saturn.png`,
 				texture: `Planets/Textures/saturn.jpg`,
 				flavorText: "Saturn became \"The place\" for weddings when an ice meteor was captured by the gravity of Saturn, making Saturn look like it's wearing a Gigantic Diamond!  What better way to win a womans heart than dragging her to the farthest reaches of human civilisation.  There's nothing out here except for Tourists and small businesses that cater to them.  A good trade in Flowers and food is to be had at this far reach of the solar system.",
-				zoom: 100
+				zoom: 900
 			},
 			uranus: {
 				radius: 25559,
@@ -121,7 +155,7 @@ class game {
 				img: `Planets/sphere/uranus.png`,
 				texture: `Planets/Textures/uranus.jpg`,
 				flavorText: "Noone visits Uranus, the jokes are far too much for any person to bare for the extremely long journey.  The few people to be found out this far, are normally on the run, or are turning a high profit from those on the run.  While there is money to be made, there's also a risk of losing your life or your ship!",
-				zoom: 100
+				zoom: 900
 			},
 			neptune: {
 				radius: 24764,
@@ -131,14 +165,16 @@ class game {
 				img: `Planets/sphere/neptune.png`,
 				texture: `Planets/Textures/neptune.jpg`,
 				flavorText: "Neptune is the furthers that Humanity has travelled.  Out this far there are only a few Science stations and listening posts.  In the hope of making contact with Aliens and number of new religions exist out this far, mainly founded by Scientists who have found the pressure of working so far from the rest of humanity to be too much.  Little money is to be made comming here, but leaving and going back into the solar system will yield a high reward for those who can make the trip.",
-				zoom: 100
+				zoom: 900
 			},
 		}
 
 		// Setup the game screen - Background etc
 		this.background();
 
-		setInterval(() => { this.zoom = this.zoom }, 500);
+		gameScreenDraw: {
+			setInterval(() => { this.zoom = this.zoom }, 1000 / 30);
+		}
 
 		this.showMenu();
 
@@ -156,6 +192,32 @@ class game {
 			});
 		}
 
+		shipInfo: {
+			setInterval(() => {
+				$('#rotation').text(`Rotation: ${this.ship.rotation.toFixed(2)}`);
+				$('#velocity').text(`Velocity: ${this.ship.velocity}`);
+				$('#mass').text(`Mass: ${this.ship.mass.toFixed(2)}`);
+				$('#fuel').text(`Fuel: ${this.ship.cargo["Liquid Methan (CH4)"].stock.toFixed(2)}`);
+				$('#wealth').text(`Wealth: ${this.ship.wealth.toFixed(2)}`);
+				$('#cargoCap').text(`Cargo max: ${this.ship.capacity.toFixed(2)}`);
+				$('#cargoNow').text(`Cargo Space: ${this.getCargoNow().toFixed(2)}`);
+			}, 1000);
+
+			// Send a position update to the server every second (when flying);
+			setInterval(this.updateServer.bind(this), 1000 / this.updateServerInterval);
+		}
+
+		chat: {
+			setInterval(this.getChat.bind(this), 5000);
+		}
+	}
+
+	getCargoNow() {
+		let cap = this.ship.capacity;
+		for (let item in this.ship.cargo) {
+			cap -= this.ship.cargo[item].stock;
+		}
+		return cap;
 	}
 
 	get zoom() {
@@ -238,13 +300,13 @@ class game {
 
 	// Takes you to a tutorial - Most likely a YouTube video
 	async tutorial() {
-		alert("Feature under development - 95004312-6e39-59a4-8b50-317730fe8b6a");
+		$.notify("Feature under development - 95004312-6e39-59a4-8b50-317730fe8b6a");
 		console.log("Feature under development", "19eaf58d-9ba1-53a9-9b07-bd3b3c3b7e89");
 	}
 
 	// Will be a link to the Wiki or similar things
 	async wiki() {
-		alert("Feature under development - c94bf69f-764f-58a9-a9e9-4ba43e831dea");
+		$.notify("Feature under development - c94bf69f-764f-58a9-a9e9-4ba43e831dea");
 		console.log("Feature under development", "d03360d8-e0f5-5865-8703-955033659a56");
 	}
 
@@ -346,6 +408,28 @@ class game {
 			$('#paragraph').text("Below is your account ID, save it so you can log back in, or insert your previous ID to login again.").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 		}
 
+		createAccountName: {
+			let acctName = document.createElement('input');
+			acctName.setAttribute("type", "text")
+			acctName.setAttribute("id", "acctName");
+			menu.append(acctName);
+
+			let acctText = $('#acctName');
+			acctText.val(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
+			acctText.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
+
 		createAccountToken: {
 			let acctInput = document.createElement('input');
 			acctInput.setAttribute("type", "text")
@@ -395,8 +479,9 @@ class game {
 
 	async login() {
 		console.log("eb721136-fbf4-53ad-babe-66a049c058b6");
-		let acctText = $('#acctInput');
-		this.accountId = acctText.val().toString();
+		this.accountId = $('#acctInput').val().toString();
+		this.accountName = $('#acctName').val().toString();
+
 		$('#menu').remove();
 		console.log("Loading account information - 6a576171-eba0-57a5-904c-462a22a2df2e");
 
@@ -404,7 +489,8 @@ class game {
 			$.getJSON(
 				"login",
 				{
-					accountId: this.accountId
+					accountId: this.accountId,
+					accountName: this.accountName,
 				},
 				resolve
 			)
@@ -418,7 +504,7 @@ class game {
 			}
 		}).catch((err) => {
 			console.log("177b0355-3289-509a-95c3-b18897ae2277");
-			alert('error in console');
+			$.notify('error in console');
 			console.error(err);
 		});
 
@@ -490,7 +576,7 @@ class game {
 
 	async startGovernor() {
 		console.log("a0aeba05-01ec-5d42-ac0b-a55ae9967db6");
-		alert("Not yet implemented");
+		$.notify("Not yet implemented");
 
 		// Would be good to play a sound here that is City founding esk
 	}
@@ -601,11 +687,11 @@ class game {
 			});
 		}
 	}
-	
+
 	async startDockingLoop() {
 		this.shipDockingTimer = setInterval(this.testDocking.bind(this), 2000);
 	}
-	
+
 	async testDocking() {
 		for (let planet in this.planets) {
 			let distance = this.distanctCalc(planet);
@@ -646,7 +732,7 @@ class game {
 	async launch() {
 		// Spawn a ship and get this captain out into space!
 		this.docked = false;
-		
+
 		this.ship.velocity = 0;
 
 
@@ -676,11 +762,11 @@ class game {
 
 		this.shipCompas = setInterval(() => {
 			this.showVectorToPlanet();
-		}, 1000/30);
+		}, 1000 / 30);
 		this.showVectorToPlanet();
 
 		$(window).on('keydown', this.keyboard.bind(this));
-		
+
 		setTimeout(() => {
 			this.startDockingLoop();
 		}, 10000);
@@ -690,16 +776,38 @@ class game {
 		console.log(event.key);
 		switch (event.key) {
 			case "ArrowUp": {
-				console.log("ArrowUp");
-				this.ship.velocity++;
-				// Ship should accellerate
-				break;
+				// The player can consume just slightly more fuel than exists, but that's ok for a game.
+				if (this.ship.cargo["Liquid Methan (CH4)"].stock >= 0) {
+					console.log("ArrowUp");
+					this.ship.velocity++;
+
+					// Fuel consumption and mass reduction
+					let forceUsed = this.MathForce(1, this.ship.mass);
+					let consumed = (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force);
+					this.ship.cargo["Liquid Methan (CH4)"].stock -= consumed;
+					this.ship.mass -= (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force) * this.goodsLookup["Liquid Methan (CH4)"].mass;
+					// Ship should accellerate
+					break;
+				} else {
+					$.notify("You have run out of fuel, Hopefully you can coast into an orbit.");
+				}
 			}
 			case "ArrowDown": {
-				console.log("ArrowDown");
-				this.ship.velocity--;
-				// Ship should Decellerate
-				break;
+				// The player can consume just slightly more fuel than exists, but that's ok for a game.
+				if (this.ship.cargo["Liquid Methan (CH4)"].stock >= 0) {
+					console.log("ArrowDown");
+					this.ship.velocity--;
+
+					// Fuel consumption and mass reduction
+					let forceUsed = this.MathForce(1, this.ship.mass);
+					let consumed = (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force);
+					this.ship.cargo["Liquid Methan (CH4)"].stock -= consumed;
+					this.ship.mass -= (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force) * this.goodsLookup["Liquid Methan (CH4)"].mass;
+
+					break;
+				} else {
+					$.notify("You have run out of fuel, Hopefully you can coast into an orbit.");
+				}
 			}
 			case "ArrowLeft": {
 				console.log("ArrowLeft");
@@ -722,16 +830,16 @@ class game {
 		for (let key in shipBox) {
 			shipBox[key] = Number(shipBox[key].replace(/[a-z]/gi, ''));
 		}
-		
+
 		let angle = ((Math.PI / 180) * (this.ship.rotation)) % 360;
 
 		$('#myShip').css({
 			transform: `rotate(${this.ship.rotation}deg)`
 		});
-		
+
 		$('#shipBox').css({
-			top: `${shipBox.top + (Math.cos(angle) * ((this.ship.velocity)))}px`,
-			left: `${shipBox.left + (Math.sin(angle) * ((this.ship.velocity)))}px`,
+			top: `${shipBox.top + (Math.sin(angle) * ((this.ship.velocity)))}px`,
+			left: `${shipBox.left + (Math.cos(angle) * ((this.ship.velocity)))}px`,
 		});
 
 		let stats: any = this.measure();
@@ -739,6 +847,108 @@ class game {
 			top: `-${shipBox.top - ((stats.height * 50) - (shipBox.height / 2))}px`,
 			left: `-${shipBox.left - ((stats.width * 50) - (shipBox.width / 2))}px`,
 		});
+	}
+
+	async updateServer() {
+		if ($('#shipBox').length) {
+			let shipBox: any = $('#shipBox').css(["height", "width", "top", "left"]);
+			for (let key in shipBox) {
+				shipBox[key] = Number(shipBox[key].replace(/[a-z]/gi, ''));
+			}
+
+			let angle = ((Math.PI / 180) * (this.ship.rotation)) % 360;
+
+			let position = {
+				top: `${shipBox.top + (Math.sin(angle) * ((this.ship.velocity)))}`,
+				left: `${shipBox.left + (Math.cos(angle) * ((this.ship.velocity)))}`,
+				angle,
+				velocity: this.ship.velocity
+			}
+			let prom = new Promise((resolve, reject) => {
+				$.post('/updatePosition', { accId: this.accountName, position }, resolve);
+			});
+
+			prom.catch((e) => {
+				console.error(e);
+				$.notify('Comm err - check console - network issues?');
+			});
+
+			prom.then((data) => {
+				this.drawOtherShips(data.notify);
+				if (undefined != data.event.name) {
+					this.message(`Event: ${data.event.name} - ${data.event.message}`);
+
+					let loss = 1 - data.event.cargo;
+
+					for (let key in this.ship.cargo) {
+						let item = this.ship.cargo[key];
+						item.stock *= loss;
+						this.ship.mass -= loss * this.goodsLookup[key].mass;
+					}
+
+					switch (data.event.name) {
+						case "solarFlare": {
+							console.log("df0092bb-c177-5b51-a962-d3cc459301d4");
+							screenFlare: {
+								let body = $('body');
+								let div = document.createElement('div');
+								div.setAttribute("id", "flare");
+								body.append(div);
+
+								let flare = $('#flare');
+								flare.hide();
+								flare.css({
+									position: "absolute",
+									margin: "0 0",
+									top: "0px",
+									left: "0px",
+
+									height: "100vh",
+									width: "100vw",
+
+									"background-color": "rgba(255, 255, 0, 0.3)",
+								});
+								flare.fadeIn(1000 / 6).fadeOut(1000 / 6);
+								setTimeout(() => {
+									console.log("200df3ee-da61-5dc2-992f-e9a521d3b467");
+									$('#flare').remove();
+								}, 1000 / 6 * 3);
+							}
+							break;
+						}
+					}
+				}
+			});
+
+			return prom;
+		}
+	}
+
+	async drawOtherShips(ships) {
+		$('.otherShip').remove();
+		for (let key in ships) {
+			let ship: any = ships[key];
+			$('#gameMap').append($.parseHTML(`<div class="otherShip" id="ShipId${key}">
+				<div id="shipImg${key}"></div>
+			</div>`));
+
+			$(`#shipImg${key}`).css({
+				position: "relative",
+				top: `0px`,
+				left: `0px`,
+				"z-index": 1,
+				"background-image": `url(${this.resource.myShip})`,
+				height: "87px",
+				width: "297px",
+				transform: `rotate(${ship.angle}deg)`
+			});
+
+			$(`#ShipId${key}`).css({
+				position: "relative",
+				top: `${ship.top}px`,
+				left: `${ship.left}px`,
+			});
+		}
 	}
 
 	async showVectorToPlanet() {
@@ -764,7 +974,7 @@ class game {
 			width: "486px",
 			height: "78px",
 		});
-		
+
 		this.updateNavigation();
 	}
 
@@ -773,7 +983,7 @@ class game {
 		this.navTarget = planet;
 		$('#destination').text("Going to: " + planet.toUpperCase());
 	}
-	
+
 	async updateNavigation() {
 		for (let planet in this.planets) {
 			let distance = this.distanctCalc(planet);
@@ -786,12 +996,11 @@ class game {
 		for (let key in dest) { dest[key] = Number(dest[key].replace(/[a-z]/gi, '')); }
 		let ship: any = $('#shipBox').css(["top", "left"]);
 		for (let key in ship) { ship[key] = Number(ship[key].replace(/[a-z]/gi, '')); }
-		
+
 		return Math.sqrt(((dest.top - ship.top) ** 2) + ((dest.left - ship.left) ** 2)).toFixed(0);
 	}
 
 	async planetMenu(planet) {
-		console.log(this.planets[planet]);
 		let menu = this.createMenu();
 		$('#menu').css({
 			"background-image": `url("${this.planets[planet].texture}")`,
@@ -811,13 +1020,21 @@ class game {
 			$('#heading').text(planet.toUpperCase()).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 
 			let p = document.createElement('p');
+			p.setAttribute("id", "population")
+			menu.append(p);
+			console.log(planet);
+			this.getPopulation(planet).then((data: any) => {
+				$('#population').text(`Population: ${data.population}`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+			});
+
+			p = document.createElement('p');
 			p.setAttribute("id", "paragraph")
 			menu.append(p);
 			$('#paragraph').text(this.planets[planet].flavorText).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 		}
 
 		// Display the orders screen
-		createButton: {
+		showOrders: {
 			let button = document.createElement('button');
 			button.setAttribute("id", "showOrders");
 			button.setAttribute('onclick', 'game.showOrders()');
@@ -826,7 +1043,6 @@ class game {
 			let buttonLive = $('#showOrders');
 			buttonLive.text("Show Orders");
 			buttonLive.css({
-				"background-color": "rgba(0,0,0,0)",
 				border: "3px solid goldenrod",
 				"background-color": "RGBA(25, 25, 25, 0.75)",
 
@@ -840,7 +1056,31 @@ class game {
 			});
 		}
 
-		createButton: {
+		// Puchase some goods to take to the next colony
+		buyGoods: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "buyGoodsView");
+			button.setAttribute('onclick', `game.buyGoodsView("${planet}")`);
+			menu.append(button);
+
+			let buttonLive = $('#buyGoodsView');
+			buttonLive.text("Buy Goods");
+			buttonLive.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
+
+
+		Launch: {
 			let button = document.createElement('button');
 			button.setAttribute("id", "launch");
 			button.setAttribute('onclick', 'game.launch()');
@@ -849,7 +1089,6 @@ class game {
 			let buttonLive = $('#launch');
 			buttonLive.text("Launch");
 			buttonLive.css({
-				"background-color": "rgba(0,0,0,0)",
 				border: "3px solid goldenrod",
 				"background-color": "RGBA(25, 25, 25, 0.75)",
 
@@ -864,6 +1103,183 @@ class game {
 		}
 
 		// Now I need to zoom to the planet....
+	}
+
+	async buyGoodsView(planet) {
+		let menu = this.createMenu();
+		menu: {
+			$('#menu').css({
+				"background-image": `url("${this.planets[planet].texture}")`,
+				"background-size": "cover",
+				"background-repeat": "repeat",
+				"overflow-x": "hidden",
+				"overflow-y": "auto",
+
+				width: "75%",
+				height: "75%",
+			});
+		}
+
+		createHeading: {
+			let h1 = document.createElement('h1');
+			h1.setAttribute("id", "heading")
+			menu.append(h1);
+			$('#heading').text("Buy Goods").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+		}
+
+		goodsWindow: {
+			let div = document.createElement('div');
+			div.setAttribute("id", "buyList")
+			menu.append(div);
+			let buyList = $('#buyList')
+			buyList.css({
+				height: "75%",
+				"overflow-y": "scroll",
+				"overflow-x": "hidden",
+				"background-color": "RGBA(25,25,25,0.75)"
+			});
+			this.getBuyGoods(planet)
+				.then((goods) => {
+					console.log(goods);
+					let buyList = $('#buyList')
+					for (let item of goods) {
+						console.log(item);
+						let p = $.parseHTML(`<p data='${JSON.stringify(item)}'><strong style="font-size: 1.25em;">1 unit of ${item.name} for ${item.price} credit(s) (Mass:${item.mass})</strong><br />
+						In Stock: ${item.stock}<button onclick="game.buyGoods('${item.name}', 1, '${planet}')">Buy 1</button><button onclick="game.buyGoods('${item.name}', 10, '${planet}')">Buy 10</button><button onclick="game.buyGoods('${item.name}', 100, '${planet}')">Buy 100</button><br />
+						In Cargo: ${this.ship.cargo[item.name].stock}<button onclick="game.sellGoods('${item.name}', 1, '${planet}')">Sell 1</button><button onclick="game.sellGoods('${item.name}', 10, '${planet}')">Sell 10</button><button onclick="game.sellGoods('${item.name}', 100, '${planet}')">Sell 100</button>
+						</p><hr/>`);
+						buyList.append(p);
+					}
+				})
+				.catch((err) => {
+					console.log("049c3df9-af8d-5ec7-9ff3-5aa4cb90f85a");
+					$.notify("Error in console");
+					console.error(err);
+				});
+		}
+
+		// Display the orders screen
+		showOrders: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "showOrders");
+			button.setAttribute('onclick', 'game.showOrders()');
+			menu.append(button);
+
+			let buttonLive = $('#showOrders');
+			buttonLive.text("Show Orders");
+			buttonLive.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
+
+		Launch: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "launch");
+			button.setAttribute('onclick', 'game.launch()');
+			menu.append(button);
+
+			let buttonLive = $('#launch');
+			buttonLive.text("Launch");
+			buttonLive.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
+	}
+
+	async buyGoods(item, quantity, planet) {
+		if (quantity < this.getCargoNow()) {
+			let prom = new Promise((resolve, reject) => {
+				$.post('/buyGoods', { item, quantity, planet, wealth: this.ship.wealth }, resolve);
+			});
+
+			prom.then((data: { name: string, price: string, mass: string, stock: string, message?: string }) => {
+				if (data.message) {
+					this.message(data.message);
+				} else {
+					let name: string = data.name;
+					let price: number = Number(data.price);
+					let mass: number = Number(data.mass);
+					let stock: number = Number(data.stock);
+
+					this.ship.cargo[name].stock += stock;
+					this.ship.mass += mass * stock;
+					this.ship.wealth -= price * stock;
+
+					this.message("Transaction complete");
+				}
+			}).catch((e) => {
+				console.error(e);
+				try {
+					this.message(e);
+				} catch (e) { }
+			});
+
+			return prom;
+		} else {
+			$.notify('You do not have sufficient cargo space');
+		}
+	}
+
+	async sellGoods(item, quantity, planet) {
+		if (quantity < this.ship.cargo[item].stock) {
+			let prom = new Promise((resolve, reject) => {
+				$.post('/sellGoods', { item, quantity, planet }, resolve);
+			});
+
+			prom.then((result: { message?: string, name: string, price: string, mass: string, stock: string }) => {
+				console.log(result);
+				if (result.message) {
+					this.message(result.message);
+				} else {
+					let name = result.name;
+					let price = Number(result.price);
+					let mass = Number(result.mass);
+					let stock = Number(result.stock);
+
+					this.ship.cargo[name].stock -= stock;
+					this.ship.mass -= mass * stock;
+					this.ship.wealth += price * stock;
+
+					this.message("Transaction complete");
+				}
+			}).catch((e) => {
+				console.log("3eb8a93a-a21c-5461-b9d7-ab3646923c28");
+				console.error(e);
+				$.notify("Error in console");
+			});
+
+			return prom;
+		} else {
+			$.notify('You do not have that much to sell');
+		}
+	}
+
+	async getBuyGoods(planet) {
+		return new Promise((resolve, reject) => {
+			$.getJSON("buyGoods", { planet }, resolve)
+		});
+	}
+
+	async message(message) {
+		$.notify(message);
 	}
 
 	async getOrders() {
@@ -926,7 +1342,7 @@ class game {
 			}
 		}).catch((err) => {
 			console.log("044c4b90-096c-5ff7-8e5b-cd290549d94b");
-			alert("Error in console");
+			$.notify("Error in console");
 			console.error(err);
 		});
 	}
@@ -934,12 +1350,12 @@ class game {
 	async showStock() {
 		// A shop screen where the player can buy goods to fill orders
 		// Should also show what the ship has onboard, so we know our stock level and can sell from this screen as well.
-		alert("Not implemented yet");
+		$.notify("Not implemented yet");
 	}
 
 	async outfit() {
 		// Allow the player to change the armament of their ship, so they can raid or bounty hunt or pirate.
-		alert("Not implemented yet");
+		$.notify("Not implemented yet");
 	}
 
 	async close() {
@@ -1005,7 +1421,7 @@ class game {
 		// }).then((jsonData) => {
 		// 	console.log(jsondata);
 		// }).catch((err) => {
-		// 	alert(`The game encountered an error: ${JSON.stringify(err)}`)
+		// 	$.notify(`The game encountered an error: ${JSON.stringify(err)}`)
 		// 	console.error("The game encountered an error", JSON.stringify(err));
 		// });
 	}
@@ -1068,6 +1484,12 @@ class game {
 				angle: (Math.PI / 180) * ((((((new Date().getTime() / 1000 / 60 / 60 / 24) % this.planets['neptune'].year) * this.acceleration) / this.planets['neptune'].year) % 1) * 360),
 			},
 		};
+	}
+
+	async getPopulation(planet) {
+		return new Promise((resolve, reject) => {
+			$.getJSON('/population', { planet }, resolve);
+		});
 	}
 
 	measure() {
@@ -1173,6 +1595,34 @@ class game {
 			soundElem.play();
 			this.soundElem = soundElem;
 		}
+	}
+
+	async chatSend() {
+		let chatIn = $('.chatIn').val();
+		$('.chatIn').val('');
+
+		return new Promise((resolve, reject) => {
+			$.post('/chat', {
+				chatIn,
+				accountId: this.accountId,
+				accountName: this.accountName,
+			}, resolve);
+		});
+	}
+
+	async getChat() {
+		let prom = new Promise((resolve, reject) => {
+			$.getJSON('/chat', resolve)
+		}).then((data) => {
+			for (let message of data) {
+				if (!this.chatMessages.includes(message)) {
+					this.chatMessages.push(message);
+					$('.chatBox').append($.parseHTML(`<p>${message}</p>`));
+				}
+			}
+		});
+
+		return prom;
 	}
 }
 

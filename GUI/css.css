@@ -6,6 +6,17 @@ h1 {
 	font-size: 2em;
 }
 
+button {
+	border: 3px solid goldenrod;
+	background-color: rgba(25, 25, 25, 0.75);
+	
+	margin: 2px 2px;
+
+	text-align: center;
+	/* font-size: 1em; */
+	color: goldenrod;
+}
+
 @keyframes mymove {
 	0% {
 		background-position-y: -10%;
@@ -34,6 +45,19 @@ h1 {
 	color: goldenrod;
 }
 
+#shipInfo {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	width: 6cm;
+}
+
+#shipInfo > ul {
+	list-style-type: none;
+}
+
 #navigation {
 	position: absolute;
 	top: 10px;
@@ -48,4 +72,51 @@ h1 {
 	list-style-type: none;
 	margin-left: -40px;
 	cursor: pointer;
+}
+
+
+.chatter {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	background-color: RGBA(25,25,25,0.75);
+	color: goldenrod;
+	width: 8cm;
+	height: 8cm;
+	text-align: left;
+}
+
+.chatBox {
+	width: 98%;
+	height: 5.5cm;
+	border: 2px solid gold;
+	color: goldenrod;
+	text-align: left;
+}
+
+.chatIn {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	border: 2px solid gold;
+	color: goldenrod;
+	text-align: left;
+	background-color: RGBA(25,25,25,0.0);
+	
+	width: 75%;
+}
+
+.chatSend {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	
+	margin: 0px 0px;
+	
+	border: 2px solid gold;
+	color: goldenrod;
+	text-align: left;
+	background-color: RGBA(25,25,25,0);
+	
+	width: 23%;
 }

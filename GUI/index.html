@@ -14,6 +14,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"
     integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
 
+  <!-- Notify - a sub package of JQUERY -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"
+    integrity="sha256-tSRROoGfGWTveRpDHFiWVz+UXt+xKNe90wwGn25lpw8=" crossorigin="anonymous"></script>
+
   <!-- Three JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"
     integrity="sha256-gSh8eotzb/CVvCREGPUNgIWuDnTYnZvVOQnRrP1eDjI=" crossorigin="anonymous"></script>
@@ -28,7 +32,7 @@
 </head>
 
 <body>
-  
+
   <script>
   // don't think I'll need to code any info here butif I do then so be it.
   </script>
@@ -45,7 +49,7 @@
     <button onclick="game.MusicVolumeDown()" style="width: 45%">Volume Down</button>
     <button onclick="game.MusicVolumeUp()" style="width: 45%">Volume Up</button>
   </div>
-  
+
   <div id="navigation">
     <h3>Navigation</h3>
     <p id="destination">Select your Destination</p>
@@ -59,6 +63,27 @@
       <li id="uranusNav" onclick="game.navigate('uranus')">Uranus</li>
       <li id="neptuneNav" onclick="game.navigate('neptune')">Neptune</li>
     </ul>
+  </div>
+  
+  <div id="shipInfo">
+    <h3>Ship Info</h3>
+    <ul>
+      <li id="rotation"></li>
+      <li id="velocity"></li>
+      <li id="wealth"></li>
+      <li id="fuel"></li>
+      <li id="mass"></li>
+      <li id="cargoCap"></li>
+      <li id="cargoNow"></li>
+    </ul>
+  </div>
+
+  <div class="chatter">
+    <h3>Chat</h3>
+    <div class="chatBox">
+
+    </div>
+    <input type="text" class="chatIn" /><button class="chatSend" onclick="game.chatSend()">Send</button>
   </div>
 </body>
 

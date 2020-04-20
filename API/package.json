@@ -31,6 +31,7 @@
     "@types/uniq": "0.0.27",
     "@types/window-or-global": "^1.0.1",
     "babelify": "^10.0.0",
+    "body-parser": "^1.19.0",
     "browserify": "^16.5.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
