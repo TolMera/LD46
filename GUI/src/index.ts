@@ -36,12 +36,23 @@ class game {
 		// Starting mass of the ship... Just an arbitraru number at this point.
 		mass: 10 * 7873,
 		wealth: 100,
+
+		"Attitude Control": {
+			value: 1,
+		},
+		"Engines": {
+			value: 1,
+		},
+		"Sensors": {
+			value: 1,
+		},
 	};
 	shipDockingTimer: NodeJS.Timeout;
 	accountName: string;
 
 	chatMessages = [];
 	updateServerInterval: number = 10;
+	navUpdateTimer: number = 10000;
 
 	MathAccelleration(force, mass) { return force / mass }
 	MathMass(acceleration, force) { return force / acceleration }
@@ -695,7 +706,8 @@ class game {
 	async testDocking() {
 		for (let planet in this.planets) {
 			let distance = this.distanctCalc(planet);
-			if (700 > Number(distance)) {
+			// !CONFIG
+			if (300 > Number(distance)) {
 				this.dock(planet);
 			}
 		}
@@ -762,7 +774,7 @@ class game {
 
 		this.shipCompas = setInterval(() => {
 			this.showVectorToPlanet();
-		}, 1000 / 30);
+		}, this.navUpdateTimer);
 		this.showVectorToPlanet();
 
 		$(window).on('keydown', this.keyboard.bind(this));
@@ -783,7 +795,8 @@ class game {
 
 					// Fuel consumption and mass reduction
 					let forceUsed = this.MathForce(1, this.ship.mass);
-					let consumed = (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force);
+					// This is not making the engines more efficient, it's making them more powrful...
+					let consumed = (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force) * (1 - (this.ship["Engines"].value / 100));
 					this.ship.cargo["Liquid Methan (CH4)"].stock -= consumed;
 					this.ship.mass -= (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force) * this.goodsLookup["Liquid Methan (CH4)"].mass;
 					// Ship should accellerate
@@ -800,7 +813,8 @@ class game {
 
 					// Fuel consumption and mass reduction
 					let forceUsed = this.MathForce(1, this.ship.mass);
-					let consumed = (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force);
+					// This is not making the engines more efficient, it's making them more powrful...
+					let consumed = (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force) * (1 - (this.ship["Engines"].value / 100));
 					this.ship.cargo["Liquid Methan (CH4)"].stock -= consumed;
 					this.ship.mass -= (forceUsed / this.goodsLookup["Liquid Methan (CH4)"].force) * this.goodsLookup["Liquid Methan (CH4)"].mass;
 
@@ -812,13 +826,13 @@ class game {
 			case "ArrowLeft": {
 				console.log("ArrowLeft");
 				// Ship sould rotate left
-				this.ship.rotation = (this.ship.rotation - 1) % 360;
+				this.ship.rotation = (this.ship.rotation - (1 + (this.ship["Attitude Control"].value / 25))) % 360;
 				break;
 			}
 			case "ArrowRight": {
 				console.log("ArrowRight");
 				// Ship should rotate right
-				this.ship.rotation = (this.ship.rotation + 1) % 360;
+				this.ship.rotation = (this.ship.rotation + (1 + (this.ship["Attitude Control"].value / 25))) % 360;
 				break;
 			}
 		}
@@ -1079,6 +1093,28 @@ class game {
 			});
 		}
 
+		// Puchase some goods to take to the next colony
+		upgradeShip: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "upgradeShipView");
+			button.setAttribute('onclick', `game.upgradeShipView('${planet}')`);
+			menu.append(button);
+
+			let buttonLive = $('#upgradeShipView');
+			buttonLive.text("Upgrade Ship");
+			buttonLive.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
 
 		Launch: {
 			let button = document.createElement('button');
@@ -1103,6 +1139,152 @@ class game {
 		}
 
 		// Now I need to zoom to the planet....
+	}
+
+	async upgradeShipView(planet) {
+		let menu = this.createMenu();
+		menu: {
+			$('#menu').css({
+				"background-image": `url("${this.planets[planet].texture}")`,
+				"background-size": "cover",
+				"background-repeat": "repeat",
+				"overflow-x": "hidden",
+				"overflow-y": "auto",
+
+				width: "75%",
+				height: "75%",
+			});
+		}
+
+		createHeading: {
+			let h1 = document.createElement('h1');
+			h1.setAttribute("id", "heading")
+			menu.append(h1);
+			$('#heading').text("Upgrade Ship").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+		}
+
+		goodsWindow: {
+			let div = document.createElement('div');
+			div.setAttribute("id", "upgradeList")
+			menu.append(div);
+			let upgradeList = $('#upgradeList')
+			upgradeList.css({
+				height: "75%",
+				"overflow-y": "scroll",
+				"overflow-x": "hidden",
+				"background-color": "RGBA(25,25,25,0.75)"
+			});
+			this.getUpgradeList(planet)
+				.then((upgrades: any) => {
+					console.log(upgrades);
+					// [{ name: "Attitude Control", cost: 4, mass: 7873 / 10 }]
+					let upgradeList = $('#upgradeList')
+					for (let key in upgrades) {
+						console.log(key);
+						let item = upgrades[key];
+						console.log(item);
+						let p = $.parseHTML(
+							'<div style="width: 100%;">' +
+							item.name + ' ' +
+							(this.ship[item.name].value > 1 ? `<button onclick="game.upgradeShip('${item.name}', -1)">Sell Upgrade (${(item.cost * (this.ship[item.name].value - 1)).toFixed(0)} credits)</button>` : '') +
+							`<div class="percent" id="${item.name}Bar"><div class="percentGreen" style="width: ${this.ship[item.name].value}%;"></div></div>` +
+							(this.ship[item.name].value < 100 ? `<button onclick="game.upgradeShip('${item.name}', 1)">Upgrade (${(item.cost * this.ship[item.name].value).toFixed(0)} credits)</button>` : '') +
+							`</div><hr/>`);
+						upgradeList.append(p);
+					}
+				})
+				.catch((err) => {
+					console.log("049c3df9-af8d-5ec7-9ff3-5aa4cb90f85a");
+					$.notify("Error in console");
+					console.error(err);
+				});
+		}
+
+		// Display the orders screen
+		showOrders: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "showOrders");
+			button.setAttribute('onclick', 'game.showOrders()');
+			menu.append(button);
+
+			let buttonLive = $('#showOrders');
+			buttonLive.text("Show Orders");
+			buttonLive.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
+
+		Launch: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "launch");
+			button.setAttribute('onclick', 'game.launch()');
+			menu.append(button);
+
+			let buttonLive = $('#launch');
+			buttonLive.text("Launch");
+			buttonLive.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
+	}
+
+	async getUpgradeList(planet) {
+		// TODO: Implement
+		return new Promise((resolve, reject) => {
+			$.getJSON('/getUpgradeList', { planet }, resolve);
+		});
+	}
+
+	async upgradeShip(part, quantity) {
+		// TODO: Implement
+		let prom = new Promise((resolve, reject) => {
+			$.post(
+				'/upgradeShip',
+				{
+					level: this.ship[part].value,
+					part,
+					quantity,
+					wealth: this.ship.wealth,
+					planet: this.zoomTo
+				},
+				resolve);
+		});
+
+		prom.then((data: any) => {
+			// Changes to the ship and wealth
+			if (data.success) {
+				this.ship.wealth += Number(data.wealth);
+				this.ship[part].value = Number(data.level);
+
+				if (part == "Sensors") {
+					this.navUpdateTimer = 10000 * (1 - (this.ship["Sensors"].value / 100));
+				}
+			} else {
+				this.message(data.message);
+			}
+			// Refresh the view
+			this.upgradeShipView(this.zoomTo);
+		});
+
+		return prom;
 	}
 
 	async buyGoodsView(planet) {
@@ -1224,7 +1406,11 @@ class game {
 					this.ship.wealth -= price * stock;
 
 					this.message("Transaction complete");
+
+					// Refresh the view
+					this.buyGoodsView(planet);
 				}
+
 			}).catch((e) => {
 				console.error(e);
 				try {
@@ -1259,6 +1445,9 @@ class game {
 					this.ship.wealth += price * stock;
 
 					this.message("Transaction complete");
+
+					// Refresh the view
+					this.buyGoodsView(planet);
 				}
 			}).catch((e) => {
 				console.log("3eb8a93a-a21c-5461-b9d7-ab3646923c28");
