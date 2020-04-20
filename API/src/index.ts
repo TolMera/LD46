@@ -6,27 +6,75 @@
 
 const planets = {
 	mercury: {
-		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		wealth: 5000,
+		air: 0,
+		iron: 0,
+		methane: 0,
+		protine: 0,
+		population: 0,
+		sugars: 0,
+		acids: 0,
+		water: 0,
 		players: {}
 	},
 	venus: {
-		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		wealth: 10000,
+		air: 0,
+		iron: 0,
+		methane: 0,
+		protine: 0,
+		population: 0,
+		sugars: 0,
+		acids: 0,
+		water: 0,
 		players: {}
 	},
 	earth: {
-		wealth: 0, population: 7600000000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		wealth: 15000,
+		air: 0,
+		iron: 0,
+		methane: 0,
+		protine: 0,
+		population: 0,
+		sugars: 0,
+		acids: 0,
+		water: 0,
 		players: {}
 	},
 	mars: {
-		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		wealth: 20000,
+		air: 0,
+		iron: 0,
+		methane: 0,
+		protine: 0,
+		population: 0,
+		sugars: 0,
+		acids: 0,
+		water: 0,
 		players: {}
 	},
 	uranus: {
-		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		wealth: 30000,
+		air: 0,
+		iron: 0,
+		methane: 0,
+		protine: 0,
+		population: 0,
+		sugars: 0,
+		acids: 0,
+		water: 0,
 		players: {}
 	},
 	neptune: {
-		wealth: 0, population: 1000 / 10, water: 0, air: 0, sugars: 0, protine: 0,
+		wealth: 40000,
+		air: 0,
+		iron: 0,
+		methane: 0,
+		protine: 0,
+		population: 0,
+		sugars: 0,
+		acids: 0,
+		water: 0,
 		players: {}
 	},
 }
@@ -126,12 +174,14 @@ express.get('/orders', function (request, response) {
 express.post('/orders', function (request, response) {
 });
 
+
 // Goods
 const goods = {
 	mercury: [
+		// mercury: ["air", "iron", "methane", "protine", "sugar"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 100 },
-		{ name: "Liquid Methan (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
 		{ name: "People", mass: 1500, price: 20, stock: planets["mercury"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 2, stock: 0 },
@@ -139,9 +189,10 @@ const goods = {
 		{ name: "Water (H2O)", mass: 1000, price: 40, stock: 100 },
 	],
 	venus: [
+		// venus: ["water", "air", "acid", "methane"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 3, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 1, stock: 0 },
-		{ name: "Liquid Methan (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
 		{ name: "People", mass: 1500, price: 10, stock: planets["venus"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 5, stock: 0 },
@@ -149,9 +200,10 @@ const goods = {
 		{ name: "Water (H2O)", mass: 1000, price: 5, stock: 100 },
 	],
 	earth: [
+		// earth: ["water", "air", "acid", "iron", "methane", "protine", "sugar"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 0, stock: 10000 },
 		{ name: "Iron (Fe)", mass: 7873, price: 15, stock: 0 },
-		{ name: "Liquid Methan (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 20, stock: 0 },
 		{ name: "People", mass: 1500, price: -10, stock: planets["earth"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 2, stock: 0 },
@@ -159,9 +211,10 @@ const goods = {
 		{ name: "Water (H2O)", mass: 1000, price: 0, stock: 10000 },
 	],
 	mars: [
+		// mars: ["air", "iron", "methane", "sugar"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 1000 },
-		{ name: "Liquid Methan (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 20, stock: 0 },
 		{ name: "People", mass: 1500, price: 20, stock: planets["mars"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 1, stock: 0 },
@@ -169,9 +222,10 @@ const goods = {
 		{ name: "Water (H2O)", mass: 1000, price: 30, stock: 100 },
 	],
 	uranus: [
+		// uranus: ["water", "air", "acid", "methane"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 5, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 30, stock: 0 },
-		{ name: "Liquid Methan (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
 		{ name: "People", mass: 1500, price: 40, stock: planets["uranus"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 10, stock: 0 },
@@ -179,9 +233,10 @@ const goods = {
 		{ name: "Water (H2O)", mass: 1000, price: 10, stock: 100 },
 	],
 	neptune: [
+		// neptune: ["water", "air", "acid", "methane"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 7, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 100, stock: 0 },
-		{ name: "Liquid Methan (CH4)", mass: 424, price: 0, stock: 10000 },
+		{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 10000 },
 		{ name: "Proteins", mass: 3500, price: 30, stock: 0 },
 		{ name: "People", mass: 1500, price: 50, stock: planets["neptune"].population },
 		{ name: "Sugars (C6H12O6)", mass: 2000, price: 15, stock: 0 },
@@ -189,75 +244,6 @@ const goods = {
 		{ name: "Water (H2O)", mass: 1000, price: 15, stock: 100 },
 	]
 }
-
-// Consume some resources every 10 minutes. - If there are not enough goods, people will die
-setInterval(() => {
-	for (let planet in goods) {
-		// Earth should never die, it's got food, water and air and probably has meat, what I think is that there's also going to be now population growth from earth, just a static number
-		if (planet == "earth") continue;
-
-		let deaths = false;
-		for (let item of goods[planet]) {
-			if ("Water (H2O)" == item.name) {
-				let consume = 0.003;
-				item.stock -= planets[planet].population * consume;
-				if (item.stock < 0) {
-					let lack = Math.abs(item.stock);
-					// Don't kill the entire planet all at once, just 1% of the population...
-					planets[planet].population -= Math.min(planets[planet].population / 100, consume * lack);
-					// Can't have half a person... Really, no you cant!
-					planets[planet].population = planets[planet].population.toFixed(0);
-					deaths = true;
-					item.stock = 0;
-				}
-			}
-			if ("Sugars (C6H12O6)" == item.name) {
-				let consume = 0.001;
-				item.stock -= planets[planet].population * consume;
-				if (item.stock < 0) {
-					let lack = Math.abs(item.stock);
-					// Don't kill the entire planet all at once, just 1% of the population...
-					planets[planet].population -= Math.min(planets[planet].population / 100, consume * lack);
-					// Can't have half a person... Really, no you cant!
-					planets[planet].population = planets[planet].population.toFixed(0);
-					deaths = true;
-					item.stock = 0;
-				}
-			}
-			if ("Proteins" == item.name) {
-				let consume = 0.0005;
-				item.stock -= planets[planet].population * consume;
-				if (item.stock < 0) {
-					let lack = Math.abs(item.stock);
-					// Don't kill the entire planet all at once, just 1% of the population...
-					planets[planet].population -= Math.min(planets[planet].population / 100, consume * lack);
-					// Can't have half a person... Really, no you cant!
-					planets[planet].population = planets[planet].population.toFixed(0);
-					deaths = true;
-					item.stock = 0;
-				}
-			}
-			if ("Air (N2 + O2 + CO2)" == item.name) {
-				let consume = 0.0015;
-				item.stock -= planets[planet].population * consume;
-				if (item.stock < 0) {
-					let lack = Math.abs(item.stock);
-					// Don't kill the entire planet all at once, just 1% of the population...
-					planets[planet].population -= Math.min(planets[planet].population / 100, consume * lack);
-					// Can't have half a person... Really, no you cant!
-					planets[planet].population = planets[planet].population.toFixed(0);
-					deaths = true;
-					item.stock = 0;
-				}
-			}
-		}
-
-		if (false == deaths) {
-			// Increase population at 0.5% per cycle
-			planets[planet].population += (planets[planet].population / 100) / 2;
-		}
-	}
-}, 1 * 60 * 1000);
 
 
 express.get('/buyGoods', function (request, response) {
@@ -339,7 +325,9 @@ express.get('/chat', function (request, response) {
 
 express.get('/population', function (request, response) {
 	let planet = request.query.planet;
-	return response.send({ planet: planets[planet] });
+	planet = Object.assign({}, planets[planet]);
+	delete planet.players;
+	return response.send({ planet: planet });
 });
 
 
@@ -527,31 +515,46 @@ express.post('/upgradeShip', function (request, response) {
 });
 
 express.post('/updateCity', function (request, response) {
-	let accId = request.body.acctd;
+	let accId = request.body.accId;
 	let planet = request.body.planet;
 	let city = request.body.city;
 
 	planet = planets[planet];
 
-	if (undefined == planet.players[accId]) {
-		planet.players[accId] = city;
-	}
+	// Use this later, City's can sell to the capital, and the capital can sell to the captains.
+	// Capital also buys from Captains, so it can sell to the Cities
 
-	planet.air -= planet.players[accId].goods[0].stock;
-	planet.population -= planet.players[accId].goods[4].stock;
-	planet.protine -= planet.players[accId].goods[3].stock;
-	planet.sugars -= planet.players[accId].goods[5].stock;
-	planet.water -= planet.players[accId].goods[7].stock;
-	planet.wealth -= planet.players[accId].wealth;
+	// if (undefined == planet.players[accId]) {
+	// 	planet.players[accId] = city;
+	// 	planet.air += Number(city.goods[0].stock);
+	// 	planet.population += Number(city.goods[4].stock);
+	// 	planet.protine += Number(city.goods[3].stock);
+	// 	planet.sugars += Number(city.goods[5].stock);
+	// 	planet.water += Number(city.goods[7].stock);
+	// 	planet.wealth += Number(city.wealth);
+	// } else {
+	// 	planet.air -= Number(planet.players[accId].goods[0].stock);
+	// 	planet.air += Number(city.goods[0].stock);
+
+	// 	planet.population -= Number(planet.players[accId].goods[4].stock);
+	// 	planet.population += Number(city.goods[4].stock);
+
+	// 	planet.protine -= Number(planet.players[accId].goods[3].stock);
+	// 	planet.protine += Number(city.goods[3].stock);
+
+	// 	planet.sugars -= Number(planet.players[accId].goods[5].stock);
+	// 	planet.sugars += Number(city.goods[5].stock);
+
+	// 	planet.water -= Number(planet.players[accId].goods[7].stock);
+	// 	planet.water += Number(city.goods[7].stock);
+
+	// 	planet.wealth -= Number(planet.players[accId].wealth);
+	// 	planet.wealth += Number(city.wealth);
+	// }
 
 	planet.players[accId] = city;
 
-	planet.players[accId].goods[0].stock += city.goods[0].stock;
-	planet.players[accId].goods[4].stock += city.goods[4].stock;
-	planet.players[accId].goods[3].stock += city.goods[3].stock;
-	planet.players[accId].goods[5].stock += city.goods[5].stock;
-	planet.players[accId].goods[7].stock += city.goods[7].stock;
-	planet.players[accId].wealth += city.wealth;
+	response.send({ success: true });
 });
 
 const port = 80;
