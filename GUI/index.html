@@ -4,6 +4,8 @@
 <head>
   <meta charset="utf-8">
 
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+
   <title>Elon-zo</title>
   <meta name="description" content="A space trade and planet colonization game">
   <meta name="author" content="(c) Bjorn Macintosh 2020">
@@ -17,10 +19,6 @@
   <!-- Notify - a sub package of JQUERY -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"
     integrity="sha256-tSRROoGfGWTveRpDHFiWVz+UXt+xKNe90wwGn25lpw8=" crossorigin="anonymous"></script>
-
-  <!-- Three JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"
-    integrity="sha256-gSh8eotzb/CVvCREGPUNgIWuDnTYnZvVOQnRrP1eDjI=" crossorigin="anonymous"></script>
 
   <!-- The actual game -->
   <script src="bundle.js"></script>
@@ -37,6 +35,7 @@
   </script>
   <div style="z-index: 10;" id="audioController">
     <h3>Audio Controller</h3>
+    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
     <p id="nowPlaying">Nothing</p>
 
     <button onclick="game.MusicPlay()" style="width: 45%">Play</button>
@@ -51,6 +50,7 @@
 
   <div style="z-index: 10;" id="navigation">
     <h3>Navigation</h3>
+    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
     <p id="destination">Select your Destination</p>
     <ul>
       <li id="mercuryNav" onclick="game.navigate('mercury')">Mercury</li>
@@ -63,9 +63,10 @@
       <li id="neptuneNav" onclick="game.navigate('neptune')">Neptune</li>
     </ul>
   </div>
-  
+
   <div style="z-index: 10;" id="shipInfo">
     <h3>Ship Info</h3>
+    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
     <ul>
       <li id="rotation"></li>
       <li id="velocity"></li>
@@ -79,6 +80,7 @@
 
   <div style="z-index: 10;" class="chatter">
     <h3>Chat</h3>
+    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
     <div class="chatBox">
 
     </div>

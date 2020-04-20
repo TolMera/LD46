@@ -345,6 +345,12 @@ const ships = {
 	// }
 };
 
+setInterval(() => {
+	for (let ship in ships) {
+
+	}
+}, 60000);
+
 express.post('/updatePosition', function (request, response) {
 	let accId = request.body.accId;
 	if (undefined == ships[accId]) ships[accId] = {};
@@ -519,7 +525,10 @@ express.post('/updateCity', function (request, response) {
 	let planet = request.body.planet;
 	let city = request.body.city;
 
+	let pay: number = Number(request.body.pay);
+
 	planet = planets[planet];
+	planet.wealth += pay;
 
 	// Use this later, City's can sell to the capital, and the capital can sell to the captains.
 	// Capital also buys from Captains, so it can sell to the Cities

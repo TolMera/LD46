@@ -115,6 +115,8 @@ class game {
 
 	pay: number = 0;
 
+	volume = 0.25;
+
 	MathAccelleration(force, mass) { return force / mass }
 	MathMass(acceleration, force) { return force / acceleration }
 	MathForce(acceleration, mass) { return acceleration * mass }
@@ -375,13 +377,14 @@ class game {
 		this.showMenu();
 
 		music: {
-			this.musicList.push("Music/BeepBoxSong1.mp3");
-			this.musicList.push("Music/BeepBoxSong2.mp3");
-			this.musicList.push("Music/BeepBoxSong3.mp3");
-			this.musicList.push("Music/BeepBoxSong4.mp3");
-			this.musicList.push("Music/BeepBoxSong5.mp3");
-			this.musicList.push("Music/BeepBoxSong6.mp3");
+			// Best to worst
 			this.musicList.push("Music/BeepBoxSong7.mp3");
+			this.musicList.push("Music/BeepBoxSong3.mp3");
+			this.musicList.push("Music/BeepBoxSong5.mp3");
+			this.musicList.push("Music/BeepBoxSong4.mp3");
+			this.musicList.push("Music/BeepBoxSong1.mp3");
+			this.musicList.push("Music/BeepBoxSong6.mp3");
+			this.musicList.push("Music/BeepBoxSong2.mp3");
 
 			$('body').one("click", () => {
 				this.jBeep(this.musicList[0]);
@@ -429,34 +432,37 @@ class game {
 					// Create the sun in the center of the screen.
 					sun = $('#' + index).css({
 						position: "absolute",
-						top: `${(50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2)}px`,
-						left: `${(50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2)}px`,
+						top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+						left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
 
 						height: `${this.zoom * planet.ratio}cm`,
 						width: `${this.zoom * planet.ratio}cm`,
 						margin: `0px 0px`,
 
 						// "background-color": "red"
-					}).css(["top", "left", "height", "width"]);
+					}).css(["height", "width"]);
+					
+					sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+					sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
 
 					// Get the top and left of the sun so we can offset from the point + half the suns height/width
 					for (let key in sun) {
-						sun[key] = Number(sun[key].replace(/[a-z]/gi, ''));
+						sun[key] = Number(sun[key].replace(/px/gi, '')).toFixed(10);
 					}
 
 					if (index == this.zoomTo) {
 						$('#gameMap').css({
 							// top: `-${(50 * Number(stats.height) * this.zoom) - (Number(stats.height) * 50) + (this.zoom * planet.ratio / 2)}px`,
 							// left: `-${(50 * Number(stats.width) * this.zoom) - (Number(stats.width) * 50) + (this.zoom * planet.ratio / 2)}px`,
-							top: `-${sun.top - ((stats.height * 50) - (sun.height / 2))}px`,
-							left: `-${sun.left - ((stats.width * 50) - (sun.width / 2))}px`,
+							top: `-${+sun.top - ((stats.height * 50) - (sun.height / 2))}px`,
+							left: `-${+sun.left - ((stats.width * 50) - (sun.width / 2))}px`,
 						});
 					}
 				} else {
 					$('#' + index).css({
 						position: "absolute",
-						top: `${(sun.top + (sun.height / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
-						left: `${(sun.left + (sun.width / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+						top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+						left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
 
 						height: `${this.zoom * planet.ratio}cm`,
 						width: `${this.zoom * planet.ratio}cm`,
@@ -468,13 +474,13 @@ class game {
 
 					// Get the top and left of the sun so we can offset from the point + half the suns height/width
 					for (let key in dimensions) {
-						dimensions[key] = Number(dimensions[key].replace(/[a-z]/gi, ''));
+						dimensions[key] = Number(dimensions[key].replace(/px/gi, '')).toFixed(10);
 					}
 
 					if (index == this.zoomTo) {
 						$('#gameMap').css({
-							top: `-${dimensions.top - ((stats.height * 50) - (dimensions.height / 2))}px`,
-							left: `-${dimensions.left - ((stats.width * 50) - (dimensions.width / 2))}px`,
+							top: `-${+dimensions.top - ((stats.height * 50) - (dimensions.height / 2))}px`,
+							left: `-${+dimensions.left - ((stats.width * 50) - (dimensions.width / 2))}px`,
 						});
 					}
 				}
@@ -493,8 +499,46 @@ class game {
 
 	// Takes you to a tutorial - Most likely a YouTube video
 	async tutorial() {
-		this.message("Feature under development - 95004312-6e39-59a4-8b50-317730fe8b6a");
-		console.log("Feature under development", "19eaf58d-9ba1-53a9-9b07-bd3b3c3b7e89");
+		let menu = this.createMenu();
+		
+		createHeading: {
+			menu.append($.parseHTML(`<h1>TL;DR;</h1>
+			<h2>Captain</h2>
+			<p>Buy cargo - Take that cargo to another planet, turn a profit when you sell it.<br />
+			<br/>
+			Watch the chat for planets that need a particular resource.  You might find it's cheaper to run a small cargo than a huge one.<br />
+			<br />
+			Click the planet name on the top right to get a navigation heading (Upgrades increase the resolution of your navigation system).<br />
+			<br />
+			Watch the details on the Top Left of the screen, this tells you all about your ship and what's going on.
+			</p>
+			<h2>Governor</h2>
+			<p>
+			Governors supply the needs of their inhabitants by upgrading factories to produce resources both for consumption and for export.  Governors need Captains to bring the resources that their colony can not produce.  It's a diplomatic position and you need to share with the other colonies on the same planet as you.<br />
+			<br />
+			Buying and selling happens with the planets global market.  When you sell goods into the market, other colonies on the planet can buy those resources, and captains can export those resources for you.  When a Captain brings resources to the planet, they sell them into the planets global market, so you'll need to get what you need and share with the other colonies on the planet.
+			</p>
+			
+			<h1>Elon-zo Tutorial</h1>
+			<h2>Elon-zo was created for Ludum Dare 46, in 72 hours by Bjorn "TolMera" Macintosh.</h2>
+			<p>
+			This game is Multiplayer and is best played with a group of friends who can work together.  You will be playing with anyone else who has joined the server as well, so be nice and use the chat feature to communicate with the Captains and Governors in the solar system.<br />
+			<br />
+			<h3>Governor</h3>
+			There are two games in this package, the first is a colony simulation game keeping in touch with the LD46 Theme, you need to balance the resources that your colony is producing and consuming so that you don't run out of Air, Water, Sugar or Protein.  These are the basics of life, and you're going to need to keep supplying them for your growing population.  But keep in mind, this is a network game and you're on a hostile foreign planet (unless you chose Earth as your colony location).<br />
+			<br />
+			Since this is a Network game, to fully take advantage of this, you're going to need to communicate with the Captains who are running shipments of cargo between all the planets in the solar system.  If the planet you're on can't provide you with water, you're going to need to entice the Captains to visit your planet with a shipment of water. So make sure you keep an eye on the chat.<br />
+			<br />
+			From your city you can build different factories, these factories consume and produce resources (description is on each factory).  When you have produced something that your colony is not consuming, you can sell that resource to the Planitary Market where Captains can come to your planet, and purchase the good that you have produced.  This is how you get more money into your economy (export).  Captains will also bring things to your planet that you need, such as Water on Mars (Import) This can be expensive and will draw money out of your economy.  Ultimately you want to trade with the captains balancing import and export so you can grow your colony and make sure that someone is bringing you that valuable Air to breath.<br />
+			<br />
+			</p>
+			<h3>Captain</h3>
+			<p>Captains pilot great ships between the planets in the solar system.  On different planets in the solar system there are upgrades for the Captains ship, you should pay close attention to the upgrades, they are not all equal.<br />
+			<br />
+			Captains have a simple job but it's difficult to balance the needs of so many planets full of people who need your services.  Take resources from one planet to another planet, turn a profit and upgrade your ship.  That's the basics of what it means to be a captain, but you also have the power to see your favourit planet succeed and to crush the hopes of other planets through economic warfare.  It's up to you as the Captain.
+			</p>`));
+			// $('#heading').text("Welcome to Elon-zo").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+		}
 	}
 
 	// Will be a link to the Wiki or similar things
@@ -525,7 +569,6 @@ class game {
 			joinLink.text("Join Universe");
 			joinLink.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -547,7 +590,6 @@ class game {
 			tutorialButton.text("Tutorial");
 			tutorialButton.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -569,7 +611,6 @@ class game {
 			wikiButton.text("Read the Wiki");
 			wikiButton.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -599,13 +640,18 @@ class game {
 		}
 
 		createAccountName: {
-			let acctName = document.createElement('input');
-			acctName.setAttribute("type", "text")
-			acctName.setAttribute("id", "acctName");
-			menu.append(acctName);
+			menu.append($.parseHTML('<p id="acctNameLabel" for="acctName">Username</p><input type="text" id="acctName">'));
+
+			$('#acctNameLabel').css({
+				border: "3px solid goldenrod",
+				// height: "1.25cm",
+				width: "23%",
+				"font-size": "1.5em",
+				margin: "3px 0px",
+			});
 
 			let acctText = $('#acctName');
-			acctText.val(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
+			acctText.val("Username");
 			acctText.css({
 				border: "3px solid goldenrod",
 				"background-color": "RGBA(25, 25, 25, 0.75)",
@@ -621,10 +667,14 @@ class game {
 		}
 
 		createAccountToken: {
-			let acctInput = document.createElement('input');
-			acctInput.setAttribute("type", "text")
-			acctInput.setAttribute("id", "acctInput");
-			menu.append(acctInput);
+			menu.append($.parseHTML('<p id="acctInputLabel" for="acctInput">Acct Key</p><input type="text" id="acctInput">'));
+			$('#acctInputLabel').css({
+				border: "3px solid goldenrod",
+				// height: "1.25cm",
+				width: "23%",
+				"font-size": "1.5em",
+				margin: "3px 0px",
+			});
 
 			let acctText = $('#acctInput');
 			acctText.val(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
@@ -652,7 +702,6 @@ class game {
 			loginButton.text("Login");
 			loginButton.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -729,7 +778,6 @@ class game {
 			liveButton1.text("I'm a Governor");
 			liveButton1.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "50%",
 				width: "49%",
@@ -751,7 +799,6 @@ class game {
 			liveButton2.text("I'm a Captain");
 			liveButton2.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "50%",
 				width: "49%",
@@ -766,6 +813,9 @@ class game {
 
 	async startGovernor() {
 		console.log("a0aeba05-01ec-5d42-ac0b-a55ae9967db6");
+
+		this.depopShip();
+
 		// Would be good to play a sound here that is City founding esk
 		let menu = this.createMenu();
 
@@ -845,6 +895,26 @@ class game {
 		}
 	}
 
+	async depopShip() {
+		Object.assign(this.ship, {
+			rotation: 0,
+			velocity: 0,
+			capacity: 200,
+			cargo: {
+				"Air (N2 + O2 + CO2)": { stock: 0 },
+				"Iron (Fe)": { stock: 0 },
+				"Liquid Methane (CH4)": { stock: 0 },
+				"Proteins": { stock: 0 },
+				"People": { stock: 0 },
+				"Sugars (C6H12O6)": { stock: 0 },
+				"Sulphuric Acid (H2SO4)": { stock: 0 },
+				"Water (H2O)": { stock: 0 },
+			},
+			wealth: 0,
+		});
+		console.log(this.ship);
+	}
+
 	async newCity(planet) {
 		console.log("d7e34205-0dfb-5aa3-81e5-2ddd4f9d130f");
 		let menu = this.createMenu();
@@ -865,6 +935,7 @@ class game {
 
 		setInterval(() => {
 			this.resourceSink()
+			$('.credits').text(this.planet.wealth + ' Credits');
 		}, 1000);
 
 		setInterval(() => {
@@ -1033,7 +1104,6 @@ class game {
 		// 	buttonLive.text("Show Orders");
 		// 	buttonLive.css({
 		// 		border: "3px solid goldenrod",
-		// 		"background-color": "RGBA(25, 25, 25, 0.75)",
 
 		// 		height: "1cm",
 		// 		width: "100%",
@@ -1053,7 +1123,7 @@ class game {
 			menu.append(button);
 
 			let buttonLive = $('#buyGoodsCityView');
-			buttonLive.text("Buy Goods");
+			buttonLive.text("Trade");
 			buttonLive.css({
 				height: "1cm",
 				width: "100%",
@@ -1077,10 +1147,12 @@ class game {
 		}
 
 		createHeading: {
-			let h1 = document.createElement('h1');
-			h1.setAttribute("id", "heading")
-			menu.append(h1);
-			$('#heading').text("Buy Goods from the Planet Market").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+			menu.append($.parseHTML(`<h1 id="heading">Buy Goods from the Planet Market</h1>`));
+			$('#heading')
+				.text(`Buy Goods from the Planet Market`)
+				.css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+
+			menu.append($.parseHTML('<div class="credits"></div>'));
 		}
 
 		goodsWindow: {
@@ -1100,12 +1172,12 @@ class game {
 					for (let item of goods) {
 						let p = $.parseHTML(`
 						<p data='${JSON.stringify(item)}'><strong style="font-size: 1.25em;">1 unit of ${item.name} for ${item.price} credit(s) (Mass:${item.mass})</strong><br />
-							In Stock: ${item.stock}
+							In Stock: ${Number(item.stock).toFixed(0)}
 								<button onclick="game.buyGoods('${item.name}', 1, '${planet}')">Buy 1</button>
 								<button onclick="game.buyGoods('${item.name}', 10, '${planet}')">Buy 10</button>
 								<button onclick="game.buyGoods('${item.name}', 100, '${planet}')">Buy 100</button>
 							<br />
-							In Cargo: ${this.planet.goods[this.goodsLookup[item.name].index].stock}
+							In Cargo: ${Number(this.planet.goods[this.goodsLookup[item.name].index].stock).toFixed(0)}
 								<button onclick="game.sellGoods('${item.name}', 1, '${planet}')">Sell 1</button>
 								<button onclick="game.sellGoods('${item.name}', 10, '${planet}')">Sell 10</button>
 								<button onclick="game.sellGoods('${item.name}', 100, '${planet}')">Sell 100</button>
@@ -1144,6 +1216,7 @@ class game {
 			let cost: number = Math.pow(this.planet.buildings[factory].level, 2) * this.factoryLookup["Sugar"].cost;
 			if (cost <= this.planet.wealth) {
 				this.planet.buildings[factory].level -= 1;
+				this.planet.wealth -= cost;
 				this.pay += cost;
 			} else {
 				this.message("Insufficient Wealth");
@@ -1159,6 +1232,7 @@ class game {
 			let cost: number = Math.pow(this.planet.buildings[factory].level, 2) * this.factoryLookup["Sugar"].cost;
 			if (cost <= this.planet.wealth) {
 				this.planet.buildings[factory].level += 1;
+				this.planet.wealth -= cost;
 				this.pay += cost;
 			} else {
 				this.message("Insufficient Wealth");
@@ -1195,7 +1269,6 @@ class game {
 			buttonLive.text("Mercury");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1217,7 +1290,6 @@ class game {
 			buttonLive.text("Venus");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1239,7 +1311,6 @@ class game {
 			buttonLive.text("Earth");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1261,7 +1332,6 @@ class game {
 			buttonLive.text("Mars");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1292,6 +1362,7 @@ class game {
 		console.log("57ee2de1-e180-5e52-bf35-3f157c0d49c6");
 		$('#menu').remove();
 		$('#shipBox').remove();
+		$('.otherShip').remove();
 		if (this.shipView) {
 			clearInterval(this.shipView);
 			this.shipView = undefined;
@@ -1417,7 +1488,7 @@ class game {
 	async focusShip() {
 		let shipBox: any = $('#shipBox').css(["height", "width", "top", "left"]);
 		for (let key in shipBox) {
-			shipBox[key] = Number(shipBox[key].replace(/[a-z]/gi, ''));
+			shipBox[key] = Number(shipBox[key].replace(/px/gi, '')).toFixed(10);
 		}
 
 		let angle = ((Math.PI / 180) * (this.ship.rotation)) % 360;
@@ -1427,14 +1498,25 @@ class game {
 		});
 
 		$('#shipBox').css({
-			top: `${shipBox.top + (Math.sin(angle) * ((this.ship.velocity)))}px`,
-			left: `${shipBox.left + (Math.cos(angle) * ((this.ship.velocity)))}px`,
+			top: `${+shipBox.top + (Math.sin(angle) * ((this.ship.velocity)))}px`,
+			left: `${+shipBox.left + (Math.cos(angle) * ((this.ship.velocity)))}px`,
 		});
 
-		let stats: any = this.measure();
+		$('#gameMap').append($.parseHTML('<div id="measure"></div>'));
+		let measure = $('#measure');
+		let stats: any = measure.css({
+			height: "1vh",
+			width: "1vw",
+		}).css(["height", "width"]);
+
+		stats.height = Number(stats.height.replace(/px/gi, '')).toFixed(10);
+		stats.width = Number(stats.width.replace(/px/gi, '')).toFixed(10);
+
+		measure.remove();
+
 		$('#gameMap').css({
-			top: `-${shipBox.top - ((stats.height * 50) - (shipBox.height / 2))}px`,
-			left: `-${shipBox.left - ((stats.width * 50) - (shipBox.width / 2))}px`,
+			top: `-${+shipBox.top - ((stats.height * 50) - (shipBox.height / 2))}px`,
+			left: `-${+shipBox.left - ((stats.width * 50) - (shipBox.width / 2))}px`,
 		});
 	}
 
@@ -1459,14 +1541,14 @@ class game {
 		if ($('#shipBox').length) {
 			let shipBox: any = $('#shipBox').css(["height", "width", "top", "left"]);
 			for (let key in shipBox) {
-				shipBox[key] = Number(shipBox[key].replace(/[a-z]/gi, ''));
+				shipBox[key] = Number(shipBox[key].replace(/px/gi, '')).toFixed(10);
 			}
 
 			let angle = ((Math.PI / 180) * (this.ship.rotation)) % 360;
 
 			let position = {
-				top: `${shipBox.top + (Math.sin(angle) * ((this.ship.velocity)))}`,
-				left: `${shipBox.left + (Math.cos(angle) * ((this.ship.velocity)))}`,
+				top: `${+shipBox.top + (Math.sin(angle) * ((this.ship.velocity)))}`,
+				left: `${+shipBox.left + (Math.cos(angle) * ((this.ship.velocity)))}`,
 				angle,
 				velocity: this.ship.velocity
 			}
@@ -1551,8 +1633,8 @@ class game {
 
 			$(`#ShipId${key}`).css({
 				position: "relative",
-				top: `${ship.top}px`,
-				left: `${ship.left}px`,
+				top: `${+ship.top}px`,
+				left: `${+ship.left}px`,
 			});
 		}
 	}
@@ -1564,11 +1646,15 @@ class game {
 		}
 
 		let dest: any = $(`#${this.navTarget}`).css(["top", "left"]);
-		for (let key in dest) { dest[key] = Number(dest[key].replace(/[a-z]/gi, '')); }
+		for (let key in dest) {
+			dest[key] = Number(dest[key].replace(/px/gi, '')).toFixed(10);
+		}
 		let ship: any = $('#shipBox').css(["top", "left"]);
-		for (let key in ship) { ship[key] = Number(ship[key].replace(/[a-z]/gi, '')); }
+		for (let key in ship) {
+			ship[key] = Number(ship[key].replace(/px/gi, '')).toFixed(10);
+		}
 
-		var angleDeg = Math.atan2(dest.top - ship.top, dest.left - ship.left) * 180 / Math.PI;
+		var angleDeg = Math.atan2(+dest.top - +ship.top, +dest.left - +ship.left) * 180 / Math.PI;
 
 		$('#arrow').css({
 			position: "relative",
@@ -1599,11 +1685,18 @@ class game {
 
 	distanctCalc(planet) {
 		let dest: any = $(`#${planet}`).css(["top", "left"]);
-		for (let key in dest) { dest[key] = Number(dest[key].replace(/[a-z]/gi, '')); }
+		for (let key in dest) {
+			dest[key] = Number(dest[key].replace(/px/gi, '')).toFixed(10);
+		}
+		
+		// console.log(for (let key);
 		let ship: any = $('#shipBox').css(["top", "left"]);
-		for (let key in ship) { ship[key] = Number(ship[key].replace(/[a-z]/gi, '')); }
+		for (let key in ship) {
+			ship[key] = Number(ship[key].replace(/px/gi, '')).toFixed(10);
+		}
+		// console.log(for (let key);
 
-		return Math.sqrt(((dest.top - ship.top) ** 2) + ((dest.left - ship.left) ** 2)).toFixed(0);
+		return Math.sqrt(((+dest.top - +ship.top) ** 2) + ((+dest.left - +ship.left) ** 2)).toFixed(0);
 	}
 
 	async planetMenu(planet) {
@@ -1650,7 +1743,6 @@ class game {
 			buttonLive.text("Show Orders");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1670,10 +1762,9 @@ class game {
 			menu.append(button);
 
 			let buttonLive = $('#buyGoodsView');
-			buttonLive.text("Buy Goods");
+			buttonLive.text("Trade");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1696,7 +1787,6 @@ class game {
 			buttonLive.text("Upgrade Ship");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1718,7 +1808,6 @@ class game {
 			buttonLive.text("Launch");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1803,7 +1892,6 @@ class game {
 			buttonLive.text("Show Orders");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1825,7 +1913,6 @@ class game {
 			buttonLive.text("Launch");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1898,7 +1985,7 @@ class game {
 			let h1 = document.createElement('h1');
 			h1.setAttribute("id", "heading")
 			menu.append(h1);
-			$('#heading').text("Buy Goods").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+			$('#heading').text("Trade").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 		}
 
 		goodsWindow: {
@@ -1919,8 +2006,8 @@ class game {
 					for (let item of goods) {
 						console.log(item);
 						let p = $.parseHTML(`<p data='${JSON.stringify(item)}'><strong style="font-size: 1.25em;">1 unit of ${item.name} for ${item.price} credit(s) (Mass:${item.mass})</strong><br />
-						In Stock: ${item.stock}<button onclick="game.buyGoods('${item.name}', 1, '${planet}')">Buy 1</button><button onclick="game.buyGoods('${item.name}', 10, '${planet}')">Buy 10</button><button onclick="game.buyGoods('${item.name}', 100, '${planet}')">Buy 100</button><br />
-						In Cargo: ${this.ship.cargo[item.name].stock}<button onclick="game.sellGoods('${item.name}', 1, '${planet}')">Sell 1</button><button onclick="game.sellGoods('${item.name}', 10, '${planet}')">Sell 10</button><button onclick="game.sellGoods('${item.name}', 100, '${planet}')">Sell 100</button>
+						In Stock: ${Number(item.stock).toFixed(0)}<button onclick="game.buyGoods('${item.name}', 1, '${planet}')">Buy 1</button><button onclick="game.buyGoods('${item.name}', 10, '${planet}')">Buy 10</button><button onclick="game.buyGoods('${item.name}', 100, '${planet}')">Buy 100</button><br />
+						In Cargo: ${Number(this.ship.cargo[item.name].stock).toFixed(0)}<button onclick="game.sellGoods('${item.name}', 1, '${planet}')">Sell 1</button><button onclick="game.sellGoods('${item.name}', 10, '${planet}')">Sell 10</button><button onclick="game.sellGoods('${item.name}', 100, '${planet}')">Sell 100</button>
 						</p><hr/>`);
 						buyList.append(p);
 					}
@@ -1943,7 +2030,6 @@ class game {
 			buttonLive.text("Show Orders");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -1965,7 +2051,6 @@ class game {
 			buttonLive.text("Launch");
 			buttonLive.css({
 				border: "3px solid goldenrod",
-				"background-color": "RGBA(25, 25, 25, 0.75)",
 
 				height: "1cm",
 				width: "100%",
@@ -2130,7 +2215,6 @@ class game {
 				buttonLive.text("Close");
 				buttonLive.css({
 					border: "3px solid goldenrod",
-					"background-color": "RGBA(25, 25, 25, 0.75)",
 
 					height: "1cm",
 					width: "100%",
@@ -2149,7 +2233,7 @@ class game {
 	}
 
 	async showStock() {
-		// A shop screen where the player can buy goods to fill orders
+		// A shop screen where the player can Trade to fill orders
 		// Should also show what the ship has onboard, so we know our stock level and can sell from this screen as well.
 		this.message("Not implemented yet");
 	}
@@ -2294,20 +2378,24 @@ class game {
 	}
 
 	measure() {
-		let div: any = document.createElement('div');
-		div.setAttribute("id", "measure");
-		$('#gameMap').append(div);
-		let measure = $('#measure');
-		let stats: any = measure.css({
-			height: "1vh",
-			width: "1vw",
-		}).css(["height", "width"]);
+		// let div: any = document.createElement('div');
+		// div.setAttribute("id", "measure");
+		// $('#gameMap').append(div);
+		// let measure = $('#measure');
+		// let stats: any = measure.css({
+		// 	height: "1vh",
+		// 	width: "1vw",
+		// }).css(["height", "width"]);
 
-		stats.height = Number(stats.height.replace(/[a-z]/gi, '')).toString();
-		stats.width = Number(stats.width.replace(/[a-z]/gi, '')).toString();
+		// stats.height = Number(stats.height.replace(/px/gi, '')).toFixed(10);
+		// stats.width = Number(stats.width.replace(/px/gi, '')).toFixed(10);
 
-		measure.remove();
-		return stats;
+		// measure.remove();
+		// console.log(stats);
+
+		// return stats;
+
+		return { height: "9.89062", width: "19.1875" };
 	}
 
 	// Start playing the music if it is paused or stopped
@@ -2348,8 +2436,10 @@ class game {
 	async MusicVolumeDown() {
 		try {
 			this.soundElem.volume -= 0.05
+			this.volume = this.soundElem.volume;
 			$('#volumeText').text(this.soundElem.volume);
 			console.log("Volume", this.soundElem.volume);
+			$('#nowPlaying').text(this.musicList[this.musicTrack] + " (Volume: " + (this.volume * 100).toFixed(0) + "%)");
 		} catch (e) {
 			// Do nothing, we just tried to adjust the volume too far
 		}
@@ -2358,8 +2448,10 @@ class game {
 	async MusicVolumeUp() {
 		try {
 			this.soundElem.volume += 0.05
+			this.volume = this.soundElem.volume;
 			$('#volumeText').text(this.soundElem.volume);
 			console.log("Volume", this.soundElem.volume);
+			$('#nowPlaying').text(this.musicList[this.musicTrack] + " (Volume: " + (this.volume * 100).toFixed(0) + "%)");
 		} catch (e) {
 			// Do nothing, we just tried to adjust the volume too far
 		}
@@ -2392,8 +2484,14 @@ class game {
 			soundElem = document.createElement("audio");
 			soundElem.setAttribute("id", "jBeep");
 			soundElem.setAttribute("src", soundFile);
-			$('#nowPlaying').text(this.musicList[this.musicTrack]);
+			$('#nowPlaying').text(this.musicList[this.musicTrack] + " (Volume: " + (this.volume * 100).toFixed(0) + "%)");
+			soundElem.volume = this.volume;
 			soundElem.play();
+
+			soundElem.addEventListener("ended", () => {
+				this.MusicNext();
+			});
+
 			this.soundElem = soundElem;
 		}
 	}
@@ -2501,19 +2599,31 @@ class game {
 			this.planet.goods[4].stock += ((this.planet.goods[4].stock / 100) / 2);
 			this.planet.goods[4].stock = Math.ceil(this.planet.goods[4].stock);
 		}
-		
+
 		if (0 == this.planet.goods[4].stock) {
 			this.lose();
 		}
 	}
-	
+
+	async shrinkDiv(x) {
+		x = $(x).parent();
+		if ($(x).css(["width"]).width == "50px") {
+			$(x).css({ width: $(x).attr("origWidth") });
+			$(x).css({ overflow: $(x).attr("origOverflow") });
+		} else {
+			$(x).attr("origWidth", $(x).css(["width"]).width);
+			$(x).attr("origOverflow", $(x).css(["overflow"]).overflow);
+			$(x).css({ width: "50px", overflow: "hidden" });
+		}
+	}
+
 	lose() {
 		console.log("Game Over");
 		var x = 0;
 		setInterval(() => {
 			this.message(`Game Over - Population is zero - Reloading (Please Try Again :) You'll get it, or try the Captain Career) ${++x}/30`);
 		}, 1000);
-		
+
 		setTimeout(() => {
 			window.location.reload()
 		}, 30000);
@@ -2525,4 +2635,9 @@ $().ready(() => {
 	Object.assign(global, {
 		game: new game()
 	});
+
+	var scale = 'scale(1)';
+	document.body.style.webkitTransform = scale;    // Chrome, Opera, Safari
+	document.body.style.msTransform = scale;       // IE 9
+	document.body.style.transform = scale;     // General
 });
