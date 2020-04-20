@@ -587,9 +587,180 @@ class game {
 
 	async startGovernor() {
 		console.log("a0aeba05-01ec-5d42-ac0b-a55ae9967db6");
-		$.notify("Not yet implemented");
-
 		// Would be good to play a sound here that is City founding esk
+		let menu = this.createMenu();
+
+		createHeading: {
+			let h1 = document.createElement('h1');
+			h1.setAttribute("id", "heading")
+			menu.append(h1);
+			$('#heading').text("On what world do you wish to settle?").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+		}
+
+		Mercury: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "mercuryButton");
+			button.setAttribute('onclick', 'game.newCity("mercury")');
+			menu.append(button);
+
+			let buttonLive = $('#mercuryButton');
+			buttonLive.text("Mercury");
+			buttonLive.css({
+
+				height: "1cm",
+				width: "100%",
+
+				"font-size": "1.5em",
+			});
+		}
+
+		Venus: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "venusButton");
+			button.setAttribute('onclick', 'game.newCity("venus")');
+			menu.append(button);
+
+			let buttonLive = $('#venusButton');
+			buttonLive.text("Venus");
+			buttonLive.css({
+
+				height: "1cm",
+				width: "100%",
+
+				"font-size": "1.5em",
+			});
+		}
+
+		Earth: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "earthButton");
+			button.setAttribute('onclick', 'game.newCity("earth")');
+			menu.append(button);
+
+			let buttonLive = $('#earthButton');
+			buttonLive.text("Earth");
+			buttonLive.css({
+
+				height: "1cm",
+				width: "100%",
+
+				"font-size": "1.5em",
+			});
+		}
+
+		Mars: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "marsButton");
+			button.setAttribute('onclick', 'game.newCity("mars")');
+			menu.append(button);
+
+			let buttonLive = $('#marsButton');
+			buttonLive.text("Mars");
+			buttonLive.css({
+
+				height: "1cm",
+				width: "100%",
+
+				"font-size": "1.5em",
+			});
+		}
+	}
+
+	async newCity(planet) {
+		console.log("d7e34205-0dfb-5aa3-81e5-2ddd4f9d130f");
+		let menu = this.createMenu();
+
+		console.log(planet);
+
+		weightCode: {
+			this.docked = true;
+			this.zoomTo = planet;
+			this.zoom = this.planets[planet].zoom
+		}
+
+		this.settlementMenu(planet);
+	}
+	
+	async settlementMenu(planet) {
+		let menu = this.createMenu();
+		
+		// View the terrain, and cover the entire screen, the player is no longer in space.
+		$('#menu').css({
+			"background-image": `url("${this.planets[planet].texture}")`,
+			"background-size": "cover",
+			"background-repeat": "repeat",
+			"overflow-x": "hidden",
+			"overflow-y": "auto",
+
+			width: "100%",
+			height: "100%",
+		});
+
+		createHeading: {
+			let h1 = document.createElement('h1');
+			h1.setAttribute("id", "heading")
+			menu.append(h1);
+			$('#heading').text(planet.toUpperCase()).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+
+			let p = document.createElement('p');
+			p.setAttribute("id", "population")
+			menu.append(p);
+			console.log(planet);
+			this.getPopulation(planet).then((data: any) => {
+				$('#population').text(`Population: ${data.population}`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+			});
+
+			p = document.createElement('p');
+			p.setAttribute("id", "paragraph")
+			menu.append(p);
+			$('#paragraph').text(this.planets[planet].flavorText).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+		}
+
+		// Display the orders screen
+		showOrders: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "showOrders");
+			button.setAttribute('onclick', 'game.showOrders()');
+			menu.append(button);
+
+			let buttonLive = $('#showOrders');
+			buttonLive.text("Show Orders");
+			buttonLive.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
+
+		// Puchase some goods to take to the next colony
+		buyGoods: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "buyGoodsView");
+			button.setAttribute('onclick', `game.buyGoodsView("${planet}")`);
+			menu.append(button);
+
+			let buttonLive = $('#buyGoodsView');
+			buttonLive.text("Buy Goods");
+			buttonLive.css({
+				border: "3px solid goldenrod",
+				"background-color": "RGBA(25, 25, 25, 0.75)",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
 	}
 
 	async startCaptain() {

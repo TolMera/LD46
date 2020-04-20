@@ -120,3 +120,19 @@ button {
 	
 	width: 23%;
 }
+
+.percent {
+	background-color: black;
+	width: 50%;
+	height: 1.25em;
+	padding: 0px 0px;
+	margin: 0px 0px;
+	border: 2px solid darkgoldenrod;
+	display: inline-block;
+}
+.percentGreen {
+	background-color: goldenrod;
+	padding: 0px 0px;
+	margin: 0px 0px;
+	height: 100%;
+}

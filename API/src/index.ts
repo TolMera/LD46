@@ -1,3 +1,9 @@
+// BUGS
+
+// I don't think we can acutally fly to Neptune? I seems to be beyond the edge of the map.
+
+
+
 const planets = {
 	mercury: { wealth: 0, population: 1000 / 10 },
 	venus: { wealth: 0, population: 1000 / 10 },
@@ -8,16 +14,7 @@ const planets = {
 }
 const users = [];
 const orders: Array<{ to: string, type: string, quantity: number, price: number }> = [
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
-	{ to: "mars", type: "acids", quantity: 100, price: 1 },
+	// { to: "mars", type: "acids", quantity: 100, price: 1 },
 ];
 
 let EXPRESS = require('express');
@@ -62,14 +59,12 @@ for (let planet of ["earth", "jupiter", "mars", "mercury", "moon", "neptune", "s
 
 for (let file of ["BeepBoxSong1.mp3", "BeepBoxSong2.mp3", "BeepBoxSong3.mp3", "BeepBoxSong4.mp3", "BeepBoxSong5.mp3", "BeepBoxSong6.mp3", "BeepBoxSong7.mp3"]) {
 	express.get(`/Music/${file}`, function (request, response) {
-		console.log(request)
 		response.sendFile(PATH.join(__dirname + `/../../GUI/Music/${file}`));
 	});
 }
 
 for (let file of ["ship1.png", "arrow.png"]) {
 	express.get(`/Art/${file}`, function (request, response) {
-		console.log(request)
 		response.sendFile(PATH.join(__dirname + `/../../GUI/Art/${file}`));
 	});
 }
@@ -111,7 +106,6 @@ express.get('/orders', function (request, response) {
 });
 
 express.post('/orders', function (request, response) {
-	console.log(request);
 });
 
 // Goods
@@ -180,49 +174,60 @@ const goods = {
 
 // Consume some resources every 10 minutes. - If there are not enough goods, people will die
 setInterval(() => {
-	for (let key in goods) {
+	for (let planet in goods) {
+		// Earth should never die, it's got food, water and air and probably has meat, what I think is that there's also going to be now population growth from earth, just a static number
+		if (planet == "earth") continue;
+		
 		let deaths = false;
-		for (let item of goods[key]) {
+		for (let item of goods[planet]) {
 			if ("Water (H2O)" == item.name) {
 				let consume = 0.003;
-				item.stock -= planets[key].population * consume;
+				item.stock -= planets[planet].population * consume;
 				if (item.stock < 0) {
 					let lack = Math.abs(item.stock);
 					// Don't kill the entire planet all at once, just 1% of the population...
-					planets[key].population -= Math.min(planets[key].population / 100, consume * lack);
+					planets[planet].population -= Math.min(planets[planet].population / 100, consume * lack);
+					// Can't have half a person... Really, no you cant!
+					planets[planet].population = planets[planet].population.toFixed(0);
 					deaths = true;
 					item.stock = 0;
 				}
 			}
 			if ("Sugars (C6H12O6)" == item.name) {
 				let consume = 0.001;
-				item.stock -= planets[key].population * consume;
+				item.stock -= planets[planet].population * consume;
 				if (item.stock < 0) {
 					let lack = Math.abs(item.stock);
 					// Don't kill the entire planet all at once, just 1% of the population...
-					planets[key].population -= Math.min(planets[key].population / 100, consume * lack);
+					planets[planet].population -= Math.min(planets[planet].population / 100, consume * lack);
+					// Can't have half a person... Really, no you cant!
+					planets[planet].population = planets[planet].population.toFixed(0);
 					deaths = true;
 					item.stock = 0;
 				}
 			}
 			if ("Proteins" == item.name) {
 				let consume = 0.0005;
-				item.stock -= planets[key].population * consume;
+				item.stock -= planets[planet].population * consume;
 				if (item.stock < 0) {
 					let lack = Math.abs(item.stock);
 					// Don't kill the entire planet all at once, just 1% of the population...
-					planets[key].population -= Math.min(planets[key].population / 100, consume * lack);
+					planets[planet].population -= Math.min(planets[planet].population / 100, consume * lack);
+					// Can't have half a person... Really, no you cant!
+					planets[planet].population = planets[planet].population.toFixed(0);
 					deaths = true;
 					item.stock = 0;
 				}
 			}
 			if ("Air (N2 + O2 + CO2)" == item.name) {
 				let consume = 0.0015;
-				item.stock -= planets[key].population * consume;
+				item.stock -= planets[planet].population * consume;
 				if (item.stock < 0) {
 					let lack = Math.abs(item.stock);
 					// Don't kill the entire planet all at once, just 1% of the population...
-					planets[key].population -= Math.min(planets[key].population / 100, consume * lack);
+					planets[planet].population -= Math.min(planets[planet].population / 100, consume * lack);
+					// Can't have half a person... Really, no you cant!
+					planets[planet].population = planets[planet].population.toFixed(0);
 					deaths = true;
 					item.stock = 0;
 				}
@@ -231,7 +236,7 @@ setInterval(() => {
 
 		if (false == deaths) {
 			// Increase population at 0.5% per cycle
-			planets[key].population += (planets[key].population / 100) / 2;
+			planets[planet].population += (planets[planet].population / 100) / 2;
 		}
 	}
 }, 1 * 60 * 1000);
@@ -351,11 +356,8 @@ express.post('/updatePosition', function (request, response) {
 		ship = ships[id];
 		// Don't tell me about myself.
 		if (ship.accId == accId) continue;
-
-		console.log(`Math.sqrt(((Number(${me.position.top}) - Number(${ship.position.top})) ** 2) + ((Number(${me.position.left}) - Number(${ship.position.left})) ** 2)).toFixed(0);`);
-
+		
 		let dist = Math.sqrt(((Number(me.position.top) - Number(ship.position.top)) ** 2) + ((Number(me.position.left) - Number(ship.position.left)) ** 2)).toFixed(0);
-		console.log(dist);
 		// Notify if a ship is within 5K radius
 		// !CONFIG
 		if (dist < 5000) {
@@ -442,9 +444,69 @@ function pirates() {
 	console.log("Not yet implemented");
 }
 
-setInterval(() => {
-	// console.log(ships);
-}, 10000);
+// Engines make you consume less fuel
+// Steering makes it quicker to turn.
+// sensors makes it so you can see more (zoom out)
+const upgrades = {
+	mercury: [
+		{ name: "Attitude Control", cost: 4, mass: 7873 / 10 }
+	],
+	venus: [
+		{ name: "Sensors", cost: 10, mass: 7873 / 10 }
+	],
+	earth: [
+		{ name: "Engines", cost: 8, mass: 7873 / 3 }
+	],
+	mars: [
+		{ name: "Attitude Control", cost: 5, mass: 7873 / 9 }
+	],
+	uranus: [
+		{ name: "Engines", cost: 3, mass: 7873 / 5 }
+	],
+	neptune: [
+		{ name: "Sensors", cost: 10, mass: 7873 / 10 }
+	]
+}
+express.get('/getUpgradeList', function (request, response) {
+	let planet = request.query.planet;
+	response.send(upgrades[planet]);
+});
+
+express.post('/upgradeShip', function (request, response) {
+	let level = Number(request.body.level);
+	let part = request.body.part;
+	let quantity = Number(request.body.quantity);
+	let wealth = Number(request.body.wealth);
+	let planet = request.body.planet;
+
+	if (quantity > 0) {
+		let cost = upgrades[planet][0].cost * level;
+		if (wealth > cost) {
+			// Can afford to buy
+			response.send({
+				success: true,
+				message: 'Transaction Successful',
+				wealth: -cost,
+				level: level + 1
+			});
+		} else {
+			response.send({ message: "Insufficient Wealth" });
+		}
+	} else {
+		let cost = upgrades[planet][0].cost * (level - 1);
+		if (planets[planet].wealth > cost) {
+			// Planet can afford to buy
+			response.send({
+				success: true,
+				message: 'Transaction Successful',
+				wealth: cost,
+				level: level - 1
+			});
+		} else {
+			response.send({ message: "Insufficient Wealth" });
+		}
+	}
+});
 
 const port = 80;
 express.listen(
