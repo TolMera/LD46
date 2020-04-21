@@ -1,7 +1,3 @@
-html {
-	zoom: 100%;
-}
-
 body {
 	font-family: 'Didact Gothic';
 }
@@ -35,8 +31,9 @@ button {
 
 #audioController {
 	position: absolute;
-	bottom: 10px;
-	right: 10px;
+	bottom: 0px;
+	right: 0px;
+	padding: 5px 5px;
 	background-color: RGBA(25,25,25,0.75);
 	color: goldenrod;
 	width: 8cm;
@@ -51,8 +48,9 @@ button {
 
 #shipInfo {
 	position: absolute;
-	top: 10px;
-	left: 10px;
+	top: 0px;
+	left: 0px;
+	padding: 5px 5px;
 	background-color: RGBA(25,25,25,0.75);
 	color: goldenrod;
 	width: 6cm;
@@ -64,8 +62,9 @@ button {
 
 #navigation {
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	top: 0px;
+	right: 0px;
+	padding: 5px 5px;
 	background-color: RGBA(25,25,25,0.75);
 	color: goldenrod;
 	width: 8cm;
@@ -81,8 +80,9 @@ button {
 
 .chatter {
 	position: absolute;
-	bottom: 10px;
-	left: 10px;
+	bottom: 0px;
+	left: 0px;
+	padding: 5px 5px;
 	background-color: RGBA(25,25,25,0.75);
 	color: goldenrod;
 	width: 8cm;
@@ -96,6 +96,8 @@ button {
 	border: 2px solid gold;
 	color: goldenrod;
 	text-align: left;
+	overflow-x: visible;
+	overflow-y: scroll;
 }
 
 .chatIn {
@@ -150,14 +152,39 @@ button {
 	background-color: RGBA(25,25,25,0.75);
 	color: goldenrod;
 	
-	text-align: left;
+	text-align: center;
 	top: 0px;
 }
-
-.shrink {
+.shrinkGrowOptions {
 	position: absolute;
 	top: 0px;
 	right: 0px;
+}
+.grow {
+	border: 1px solid goldenrod;
+	display: inline-block;
+	
+	margin: 3px 3px;
+	padding: 3px 3px;
+	
+	width: 1em;
+	text-align: center;
+	font-weight: bold;
+	font-size: 1em;
+	font-family: monospace;
+}
+.shrink {
+	border: 1px solid goldenrod;
+	display: inline-block;
+	
+	margin: 3px 3px;
+	padding: 3px 3px;
+	
+	width: 1em;
+	text-align: center;
+	font-weight: bold;
+	font-size: 1em;
+	font-family: monospace;
 }
 
 .credits {

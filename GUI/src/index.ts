@@ -62,9 +62,9 @@ class game {
 				index: 2,
 				level: 0
 			},
-			protine: {
+			protein: {
 				name: "Proteins",
-				shortName: "Protine",
+				shortName: "Protein",
 				index: 3,
 				level: 0
 			},
@@ -164,7 +164,7 @@ class game {
 		},
 		"Proteins": {
 			name: "Proteins",
-			shortName: "Protine",
+			shortName: "Protein",
 			index: 3,
 			mass: 3500
 		},
@@ -178,13 +178,13 @@ class game {
 
 	planetLookup: any = {
 		mercury: {
-			factories: ["air", "iron", "methane", "protine", "sugar"]
+			factories: ["air", "iron", "methane", "protein", "sugar"]
 		},
 		venus: {
 			factories: ["water", "air", "acid", "methane"]
 		},
 		earth: {
-			factories: ["water", "air", "acid", "iron", "methane", "protine", "sugar"]
+			factories: ["water", "air", "acid", "iron", "methane", "protein", "sugar"]
 		},
 		mars: {
 			factories: ["air", "iron", "methane", "sugar"]
@@ -238,13 +238,13 @@ class game {
 			uses: ["Air", "Sugar"],
 			product: "Methane",
 		},
-		Protine: {
-			name: "Protine",
+		Protein: {
+			name: "Protein",
 			longName: "Proteins",
 			cost: 10,
 			production: 1,
 			uses: ["Air", "Sugar", "Water"],
-			product: "Protine",
+			product: "Protein",
 		},
 		Sugar: {
 			name: "Sugar",
@@ -420,72 +420,85 @@ class game {
 		return this._zoom;
 	}
 	set zoom(value) {
-		this._zoom = value;
+		if (this._zoom != value) {
+			this._zoom = value;
+			this.getPlanets().then((positions) => {
+				let sun;
+				for (let index in this.planets) {
+					let planet = this.planets[index];
+					let stats: any = this.measure();
+					if ("sun" == index) {
+						// Create the sun in the center of the screen.
+						sun = $('#' + index).css({
+							top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+							left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+							height: `${this.zoom * planet.ratio}cm`,
+							width: `${this.zoom * planet.ratio}cm`,
+						}).css(["height", "width"]);
 
-		this.getPlanets().then((positions) => {
-			let sun: any;
-			for (let index in this.planets) {
-				let planet = this.planets[index];
-				let stats: any = this.measure();
-				if ("sun" == index) {
+						sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+						sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+						sun.height = this.zoom * planet.ratio;
+						sun.width = this.zoom * planet.ratio;
 
-					// Create the sun in the center of the screen.
-					sun = $('#' + index).css({
-						position: "absolute",
-						top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
-						left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
-
-						height: `${this.zoom * planet.ratio}cm`,
-						width: `${this.zoom * planet.ratio}cm`,
-						margin: `0px 0px`,
-
-						// "background-color": "red"
-					}).css(["height", "width"]);
-					
-					sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
-					sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
-
-					// Get the top and left of the sun so we can offset from the point + half the suns height/width
-					for (let key in sun) {
-						sun[key] = Number(sun[key].replace(/px/gi, '')).toFixed(10);
-					}
-
-					if (index == this.zoomTo) {
-						$('#gameMap').css({
-							// top: `-${(50 * Number(stats.height) * this.zoom) - (Number(stats.height) * 50) + (this.zoom * planet.ratio / 2)}px`,
-							// left: `-${(50 * Number(stats.width) * this.zoom) - (Number(stats.width) * 50) + (this.zoom * planet.ratio / 2)}px`,
-							top: `-${+sun.top - ((stats.height * 50) - (sun.height / 2))}px`,
-							left: `-${+sun.left - ((stats.width * 50) - (sun.width / 2))}px`,
-						});
-					}
-				} else {
-					$('#' + index).css({
-						position: "absolute",
-						top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
-						left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
-
-						height: `${this.zoom * planet.ratio}cm`,
-						width: `${this.zoom * planet.ratio}cm`,
-						margin: `0px 0px`,
-
-						// "background-color": "red"
-					});
-					let dimensions: any = $('#' + index).css(["top", "left", "height", "width"]);
-
-					// Get the top and left of the sun so we can offset from the point + half the suns height/width
-					for (let key in dimensions) {
-						dimensions[key] = Number(dimensions[key].replace(/px/gi, '')).toFixed(10);
-					}
-
-					if (index == this.zoomTo) {
-						$('#gameMap').css({
-							top: `-${+dimensions.top - ((stats.height * 50) - (dimensions.height / 2))}px`,
-							left: `-${+dimensions.left - ((stats.width * 50) - (dimensions.width / 2))}px`,
+					} else {
+						$('#' + index).css({
+							top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+							left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+							height: `${this.zoom * planet.ratio}cm`,
+							width: `${this.zoom * planet.ratio}cm`,
 						});
 					}
 				}
-			}
-		});
+			});
+		} else {
+			this.getPlanets().then((positions) => {
+				let sun: any;
+				for (let index in this.planets) {
+					let planet = this.planets[index];
+					let stats: any = this.measure();
+					if ("sun" == index) {
+
+						// Create the sun in the center of the screen.
+						sun = $('#' + index)
+							.css({
+								top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+								left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+							}).css(["height", "width"]);
+
+						sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+						sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+						sun.height = this.zoom * planet.ratio;
+						sun.width = this.zoom * planet.ratio;
+
+						if (index == this.zoomTo) {
+							$('#gameMap').css({
+								top: `-${+sun.top - ((stats.height * 50) - (sun.height / 2))}px`,
+								left: `-${+sun.left - ((stats.width * 50) - (sun.width / 2))}px`,
+							});
+						}
+					} else {
+						$('#' + index).animate({
+							top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+							left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+						}, /* !CONFIG */ 1000 / 1, "linear");
+						let dimensions: any = $('#' + index).css(["top", "left", "height", "width"]);
+
+						// Get the top and left of the sun so we can offset from the point + half the suns height/width
+						for (let key in dimensions) {
+							dimensions[key] = Number(dimensions[key].replace(/px/gi, '')).toFixed(10);
+						}
+
+						if (index == this.zoomTo) {
+							$('#gameMap').css({
+								top: `-${+dimensions.top - ((stats.height * 50) - (dimensions.height / 2))}px`,
+								left: `-${+dimensions.left - ((stats.width * 50) - (dimensions.width / 2))}px`,
+							});
+						}
+					}
+				}
+			});
+		}
 	}
 
 	// Connects to the game server and starts actually playing the game
@@ -500,7 +513,7 @@ class game {
 	// Takes you to a tutorial - Most likely a YouTube video
 	async tutorial() {
 		let menu = this.createMenu();
-		
+
 		createHeading: {
 			menu.append($.parseHTML(`<h1>TL;DR;</h1>
 			<h2>Captain</h2>
@@ -984,7 +997,7 @@ class game {
 					$('#planetDetails').text(`Planet Details: 
 					[Population: ${data.planet.population}] ---- 
 					[Air: ${data.planet.air}] ---- 
-					[Protine: ${data.planet.protine}] ---- 
+					[Protein: ${data.planet.protein}] ---- 
 					[Sugars: ${data.planet.sugars}] ---- 
 					[Water: ${data.planet.water}] ---- 
 					[Acids: ${data.planet.acids}] ---- 
@@ -998,7 +1011,7 @@ class game {
 				$('#planetDetails').text(`Planet Details: 
 				[Population: ${data.planet.population}] ---- 
 				[Air: ${data.planet.air}] ---- 
-				[Protine: ${data.planet.protine}] ---- 
+				[Protein: ${data.planet.protein}] ---- 
 				[Sugars: ${data.planet.sugars}] ---- 
 				[Water: ${data.planet.water}] ---- 
 				[Acids: ${data.planet.acids}] ---- 
@@ -1016,7 +1029,7 @@ class game {
 					City Details:
 					[Population: ${Number(this.planet.goods[4].stock).toFixed(2)}] ---- 
 					[Air: ${Number(this.planet.goods[0].stock).toFixed(2)}] ---- 
-					[Protine: ${Number(this.planet.goods[3].stock).toFixed(2)}] ---- 
+					[Protein: ${Number(this.planet.goods[3].stock).toFixed(2)}] ---- 
 					[Sugars: ${Number(this.planet.goods[5].stock).toFixed(2)}] ---- 
 					[Water: ${Number(this.planet.goods[7].stock).toFixed(2)}] ---- 
 					[Acids: ${Number(this.planet.goods[6].stock).toFixed(2)}] ---- 
@@ -1029,7 +1042,7 @@ class game {
 				City Details:
 				[Population: ${Number(this.planet.goods[4].stock).toFixed(2)}] ---- 
 				[Air: ${Number(this.planet.goods[0].stock).toFixed(2)}] ---- 
-				[Protine: ${Number(this.planet.goods[3].stock).toFixed(2)}] ---- 
+				[Protein: ${Number(this.planet.goods[3].stock).toFixed(2)}] ---- 
 				[Sugars: ${Number(this.planet.goods[5].stock).toFixed(2)}] ---- 
 				[Water: ${Number(this.planet.goods[7].stock).toFixed(2)}] ---- 
 				[Acids: ${Number(this.planet.goods[6].stock).toFixed(2)}] ---- 
@@ -1049,71 +1062,49 @@ class game {
 				<div>
 					${(this.planetLookup[this.zoomTo].factories.includes("water") ? `
 					<div class="factory" id="factoryWater" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
-						<p>Produce Water at this factory<br /><br />requires: A world with water</p>
+						<h3>Produce Water at this factory</h3><p>requires: A world with water</p>
 						<p name="level">Level ${this.planet.buildings["Water".toLowerCase()].level}</p>
 						${(this.planet.buildings["Water".toLowerCase()].level < 100 ? `<button onclick="game.levelUp('Water')">Level Up (${(Math.pow(this.planet.buildings["Water".toLowerCase()].level, 2) * this.factoryLookup["Water"].cost)} credits)</button>` : '')}
 					</div>` : '')}
 					${(this.planetLookup[this.zoomTo].factories.includes("air") ? `
 					<div class="factory" id="factoryAir" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
-						<p>Produce Air at this factory<br /><br />requires: ${this.factoryLookup["Air"].uses.join(" + ")}</p>
+						<h3>Produce Air at this factory</h3><p>requires: ${this.factoryLookup["Air"].uses.join(" + ")}</p>
 						<p name="level">Level ${this.planet.buildings["Air".toLowerCase()].level}</p>
 						${(this.planet.buildings["Air".toLowerCase()].level < 100 ? `<button onclick="game.levelUp('Air')">Level Up (${(Math.pow(this.planet.buildings["Air".toLowerCase()].level, 2) * this.factoryLookup["Air"].cost)} credits)</button>` : '')}
 					</div>` : '')}
 					${(this.planetLookup[this.zoomTo].factories.includes("acid") ? `
 					<div class="factory" id="factoryAcid" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
-						<p>Produce Acid at this factory<br /><br />requires: A world with Atmosphere (prefereably acidic)</p>
+						<h3>Produce Acid at this factory</h3><p>requires: A world with Atmosphere (prefereably acidic)</p>
 						<p name="level">Level ${this.planet.buildings["Acid".toLowerCase()].level}</p>
 						${(this.planet.buildings["Acid".toLowerCase()].level < 100 ? `<button onclick="game.levelUp('Acid')">Level Up (${(Math.pow(this.planet.buildings["Acid".toLowerCase()].level, 2) * this.factoryLookup["Acid"].cost)} credits)</button>` : '')}
 					</div>` : '')}
 					${(this.planetLookup[this.zoomTo].factories.includes("iron") ? `
 					<div class="factory" id="factoryIron" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
-						<p>Produce Iron at this factory<br /><br />requires: ${this.factoryLookup["Iron"].uses.join(" + ")}</p>
+						<h3>Produce Iron at this factory</h3><p>requires: ${this.factoryLookup["Iron"].uses.join(" + ")}</p>
 						<p name="level">Level ${this.planet.buildings["Iron".toLowerCase()].level}</p>
 						${(this.planet.buildings["Iron".toLowerCase()].level < 100 ? `<button onclick="game.levelUp('Iron')">Level Up (${(Math.pow(this.planet.buildings["Iron".toLowerCase()].level, 2) * this.factoryLookup["Iron"].cost)} credits)</button>` : '')}
 					</div>` : '')}
 					${(this.planetLookup[this.zoomTo].factories.includes("methane") ? `
 					<div class="factory" id="factoryMethane" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
-						<p>Produce Methane at this factory<br /><br />requires: ${this.factoryLookup["Methane"].uses.join(" + ")}</p>
+						<h3>Produce Methane at this factory</h3><p>requires: ${this.factoryLookup["Methane"].uses.join(" + ")}</p>
 						<p name="level">Level ${this.planet.buildings["Methane".toLowerCase()].level}</p>
 						${(this.planet.buildings["Methane".toLowerCase()].level < 100 ? `<button onclick="game.levelUp('Methane')">Level Up (${(Math.pow(this.planet.buildings["Methane".toLowerCase()].level, 2) * this.factoryLookup["Methane"].cost)} credits)</button>` : '')}
 					</div>` : '')}
-					${(this.planetLookup[this.zoomTo].factories.includes("protine") ? `
-					<div class="factory" id="factoryProtine" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
-						<p>Produce Protine at this factory<br /><br />requires: ${this.factoryLookup["Protine"].uses.join(" + ")}</p>
-						<p name="level">Level ${this.planet.buildings["Protine".toLowerCase()].level}</p>
-						${(this.planet.buildings["Protine".toLowerCase()].level < 100 ? `<button onclick="game.levelUp('Protine')">Level Up (${(Math.pow(this.planet.buildings["Protine".toLowerCase()].level, 2) * this.factoryLookup["Protine"].cost)} credits)</button>` : '')}
+					${(this.planetLookup[this.zoomTo].factories.includes("protein") ? `
+					<div class="factory" id="factoryProtein" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
+						<h3>Produce Protein at this factory</h3><p>requires: ${this.factoryLookup["Protein"].uses.join(" + ")}</p>
+						<p name="level">Level ${this.planet.buildings["Protein".toLowerCase()].level}</p>
+						${(this.planet.buildings["Protein".toLowerCase()].level < 100 ? `<button onclick="game.levelUp('Protein')">Level Up (${(Math.pow(this.planet.buildings["Protein".toLowerCase()].level, 2) * this.factoryLookup["Protein"].cost)} credits)</button>` : '')}
 					</div>` : '')}
 					${(this.planetLookup[this.zoomTo].factories.includes("sugar") ? `
 					<div class="factory" id="factorySugar" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
-						<p>Produce Sugar at this factory<br /><br />requires: ${this.factoryLookup["Sugar"].uses.join(" + ")}</p>
+						<h3>Produce Sugar at this factory</h3><p>requires: ${this.factoryLookup["Sugar"].uses.join(" + ")}</p>
 						<p name="level">Level ${this.planet.buildings["Sugar".toLowerCase()].level}</p>
 						${(this.planet.buildings["Sugar".toLowerCase()].level < 100 ? `<button onclick="game.levelUp('Sugar')">Level Up (${(Math.pow(this.planet.buildings["Sugar".toLowerCase()].level, 2) * this.factoryLookup["Sugar"].cost)} credits)</button>` : '')}
 					</div>` : '')}
 				</div>
 			`));
 		}
-
-		// // Display the orders screen
-		// showOrders: {
-		// 	let button = document.createElement('button');
-		// 	button.setAttribute("id", "showOrders");
-		// 	button.setAttribute('onclick', 'game.showOrders()');
-		// 	menu.append(button);
-
-		// 	let buttonLive = $('#showOrders');
-		// 	buttonLive.text("Show Orders");
-		// 	buttonLive.css({
-		// 		border: "3px solid goldenrod",
-
-		// 		height: "1cm",
-		// 		width: "100%",
-		// 		margin: "3px 0px",
-
-		// 		"text-align": "center",
-		// 		"font-size": "1.5em",
-		// 		color: "goldenrod"
-		// 	});
-		// }
 
 		// Puchase some goods to take to the next colony
 		buyGoods: {
@@ -1688,7 +1679,7 @@ class game {
 		for (let key in dest) {
 			dest[key] = Number(dest[key].replace(/px/gi, '')).toFixed(10);
 		}
-		
+
 		// console.log(for (let key);
 		let ship: any = $('#shipBox').css(["top", "left"]);
 		for (let key in ship) {
@@ -2330,13 +2321,82 @@ class game {
 			});
 		}
 
-		for (let index in this.planets) {
-			let planet = this.planets[index];
-			let img = document.createElement('img');
-			img.setAttribute("id", index);
-			img.setAttribute('src', planet.img)
-			$('#gameMap').append(img);
-		}
+		/*
+						let stats: any = this.measure();
+						if ("sun" == index) {
+		
+							// Create the sun in the center of the screen.
+							sun = $('#' + index)
+								.css({
+									top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+									left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+		
+		
+									// "background-color": "red"
+								}).css(["height", "width"]);
+		
+							sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+							sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+		
+							// Get the top and left of the sun so we can offset from the point + half the suns height/width
+							for (let key in sun) {
+								sun[key] = Number(sun[key].replace(/px/gi, '')).toFixed(10);
+							}
+		
+							if (index == this.zoomTo) {
+								$('#gameMap').css({
+									// top: `-${(50 * Number(stats.height) * this.zoom) - (Number(stats.height) * 50) + (this.zoom * planet.ratio / 2)}px`,
+									// left: `-${(50 * Number(stats.width) * this.zoom) - (Number(stats.width) * 50) + (this.zoom * planet.ratio / 2)}px`,
+									top: `-${+sun.top - ((stats.height * 50) - (sun.height / 2))}px`,
+									left: `-${+sun.left - ((stats.width * 50) - (sun.width / 2))}px`,
+								});
+							}
+						} else {
+							$('#' + index).css({
+		
+		
+								// "background-color": "red"
+							}).animate({
+								top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+								left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+		*/
+
+		let sun;
+
+		this.getPlanets().then((positions) => {
+			for (let index in this.planets) {
+				let planet = this.planets[index];
+				$('#gameMap').append($.parseHTML(`<img id="${index}" src="${planet.img}" />`))
+				$(`#${index}`).css({
+					position: "absolute",
+					height: `${this.zoom * planet.ratio}cm`,
+					width: `${this.zoom * planet.ratio}cm`,
+					margin: `0px 0px`,
+				});
+
+				let stats: any = this.measure();
+				if ("sun" == index) {
+					// Create the sun in the center of the screen.
+					sun = $('#' + index).css({
+						top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+						left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+					}).css(["height", "width"]);
+
+					sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+					sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+
+					// Get the top and left of the sun so we can offset from the point + half the suns height/width
+					for (let key in sun) {
+						sun[key] = Number(sun[key].replace(/px/gi, '')).toFixed(10);
+					}
+				} else {
+					$('#' + index).css({
+						top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+						left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+					});
+				}
+			}
+		});
 	}
 
 	getPlanets = async () => {
@@ -2500,13 +2560,21 @@ class game {
 		let chatIn = $('.chatIn').val();
 		$('.chatIn').val('');
 
-		return new Promise((resolve, reject) => {
+		let prom = new Promise((resolve, reject) => {
 			$.post('/chat', {
 				chatIn,
 				accountId: this.accountId,
 				accountName: this.accountName,
 			}, resolve);
 		});
+
+		prom.then((data) => {
+			$(".chatBox").stop().animate({ scrollTop: $(".chatBox")[0].scrollHeight }, 1000);
+
+			return data;
+		});
+
+		return prom;
 	}
 
 	async getChat() {
@@ -2517,6 +2585,7 @@ class game {
 				if (!this.chatMessages.includes(message)) {
 					this.chatMessages.push(message);
 					$('.chatBox').append($.parseHTML(`<p>${message}</p>`));
+					$(".chatBox").stop().animate({ scrollTop: $(".chatBox")[0].scrollHeight }, 1000);
 				}
 			}
 		});
@@ -2606,15 +2675,23 @@ class game {
 	}
 
 	async shrinkDiv(x) {
-		x = $(x).parent();
-		if ($(x).css(["width"]).width == "50px") {
-			$(x).css({ width: $(x).attr("origWidth") });
-			$(x).css({ overflow: $(x).attr("origOverflow") });
-		} else {
-			$(x).attr("origWidth", $(x).css(["width"]).width);
-			$(x).attr("origOverflow", $(x).css(["overflow"]).overflow);
-			$(x).css({ width: "50px", overflow: "hidden" });
-		}
+		let parent = $(x).parent().parent();
+		let width = Number($(parent).css(["width"]).width.replace(/px/gi, ''));
+		// let height = Number($(parent).css(["height"]).height.replace(/px/gi, ''));
+		$(parent).css({
+			width: `${width / 1.1}px`,
+			// height: `${height / 1.1}px`,
+		});
+	}
+
+	async growDiv(x) {
+		let parent = $(x).parent().parent();
+		let width = Number($(parent).css(["width"]).width.replace(/px/gi, ''));
+		// let height = Number($(parent).css(["height"]).height.replace(/px/gi, ''));
+		$(parent).css({
+			width: `${width * 1.1}px`,
+			// height: `${height * 1.1}px`,
+		});
 	}
 
 	lose() {
@@ -2635,9 +2712,4 @@ $().ready(() => {
 	Object.assign(global, {
 		game: new game()
 	});
-
-	var scale = 'scale(1)';
-	document.body.style.webkitTransform = scale;    // Chrome, Opera, Safari
-	document.body.style.msTransform = scale;       // IE 9
-	document.body.style.transform = scale;     // General
 });

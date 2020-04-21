@@ -10,7 +10,7 @@ const planets = {
 		air: 0,
 		iron: 0,
 		methane: 0,
-		protine: 0,
+		protein: 0,
 		population: 0,
 		sugars: 0,
 		acids: 0,
@@ -22,7 +22,7 @@ const planets = {
 		air: 0,
 		iron: 0,
 		methane: 0,
-		protine: 0,
+		protein: 0,
 		population: 0,
 		sugars: 0,
 		acids: 0,
@@ -34,7 +34,7 @@ const planets = {
 		air: 0,
 		iron: 0,
 		methane: 0,
-		protine: 0,
+		protein: 0,
 		population: 0,
 		sugars: 0,
 		acids: 0,
@@ -46,7 +46,7 @@ const planets = {
 		air: 0,
 		iron: 0,
 		methane: 0,
-		protine: 0,
+		protein: 0,
 		population: 0,
 		sugars: 0,
 		acids: 0,
@@ -58,7 +58,7 @@ const planets = {
 		air: 0,
 		iron: 0,
 		methane: 0,
-		protine: 0,
+		protein: 0,
 		population: 0,
 		sugars: 0,
 		acids: 0,
@@ -70,7 +70,7 @@ const planets = {
 		air: 0,
 		iron: 0,
 		methane: 0,
-		protine: 0,
+		protein: 0,
 		population: 0,
 		sugars: 0,
 		acids: 0,
@@ -178,7 +178,7 @@ express.post('/orders', function (request, response) {
 // Goods
 const goods = {
 	mercury: [
-		// mercury: ["air", "iron", "methane", "protine", "sugar"],
+		// mercury: ["air", "iron", "methane", "protein", "sugar"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
 		{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 100 },
 		{ name: "Liquid Methane (CH4)", mass: 424, price: 30, stock: 10000 },
@@ -200,7 +200,7 @@ const goods = {
 		{ name: "Water (H2O)", mass: 1000, price: 5, stock: 100 },
 	],
 	earth: [
-		// earth: ["water", "air", "acid", "iron", "methane", "protine", "sugar"],
+		// earth: ["water", "air", "acid", "iron", "methane", "protein", "sugar"],
 		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 1, stock: 10000 },
 		{ name: "Iron (Fe)", mass: 7873, price: 15, stock: 0 },
 		{ name: "Liquid Methane (CH4)", mass: 424, price: 10, stock: 10000 },
@@ -537,7 +537,7 @@ express.post('/updateCity', function (request, response) {
 	// 	planet.players[accId] = city;
 	// 	planet.air += Number(city.goods[0].stock);
 	// 	planet.population += Number(city.goods[4].stock);
-	// 	planet.protine += Number(city.goods[3].stock);
+	// 	planet.protein += Number(city.goods[3].stock);
 	// 	planet.sugars += Number(city.goods[5].stock);
 	// 	planet.water += Number(city.goods[7].stock);
 	// 	planet.wealth += Number(city.wealth);
@@ -548,8 +548,8 @@ express.post('/updateCity', function (request, response) {
 	// 	planet.population -= Number(planet.players[accId].goods[4].stock);
 	// 	planet.population += Number(city.goods[4].stock);
 
-	// 	planet.protine -= Number(planet.players[accId].goods[3].stock);
-	// 	planet.protine += Number(city.goods[3].stock);
+	// 	planet.protein -= Number(planet.players[accId].goods[3].stock);
+	// 	planet.protein += Number(city.goods[3].stock);
 
 	// 	planet.sugars -= Number(planet.players[accId].goods[5].stock);
 	// 	planet.sugars += Number(city.goods[5].stock);

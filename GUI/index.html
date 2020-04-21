@@ -4,8 +4,6 @@
 <head>
   <meta charset="utf-8">
 
-  <meta name="viewport" content="width=device-width, user-scalable=no">
-
   <title>Elon-zo</title>
   <meta name="description" content="A space trade and planet colonization game">
   <meta name="author" content="(c) Bjorn Macintosh 2020">
@@ -29,13 +27,12 @@
 </head>
 
 <body>
-
-  <script>
-  // don't think I'll need to code any info here butif I do then so be it.
-  </script>
   <div style="z-index: 10;" id="audioController">
     <h3>Audio Controller</h3>
-    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
+    <div class="shrinkGrowOptions">
+      <div class="grow" onclick='game.growDiv(this)'>+</div>
+      <div class="shrink" onclick='game.shrinkDiv(this)'>-</div>
+    </div>
     <p id="nowPlaying">Nothing</p>
 
     <button onclick="game.MusicPlay()" style="width: 45%">Play</button>
@@ -50,7 +47,10 @@
 
   <div style="z-index: 10;" id="navigation">
     <h3>Navigation</h3>
-    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
+    <div class="shrinkGrowOptions">
+      <div class="grow" onclick='game.growDiv(this)'>+</div>
+      <div class="shrink" onclick='game.shrinkDiv(this)'>-</div>
+    </div>
     <p id="destination">Select your Destination</p>
     <ul>
       <li id="mercuryNav" onclick="game.navigate('mercury')">Mercury</li>
@@ -66,7 +66,10 @@
 
   <div style="z-index: 10;" id="shipInfo">
     <h3>Ship Info</h3>
-    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
+    <div class="shrinkGrowOptions">
+      <div class="grow" onclick='game.growDiv(this)'>+</div>
+      <div class="shrink" onclick='game.shrinkDiv(this)'>-</div>
+    </div>
     <ul>
       <li id="rotation"></li>
       <li id="velocity"></li>
@@ -80,7 +83,10 @@
 
   <div style="z-index: 10;" class="chatter">
     <h3>Chat</h3>
-    <div class="shrink" onclick='game.shrinkDiv(this)'>[ - ]</div>
+    <div class="shrinkGrowOptions">
+      <div class="grow" onclick='game.growDiv(this)'>+</div>
+      <div class="shrink" onclick='game.shrinkDiv(this)'>-</div>
+    </div>
     <div class="chatBox">
 
     </div>
