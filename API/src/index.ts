@@ -129,7 +129,7 @@ for (let file of ["BeepBoxSong1.mp3", "BeepBoxSong2.mp3", "BeepBoxSong3.mp3", "B
 	});
 }
 
-for (let file of ["ship1.png", "arrow.png"]) {
+for (let file of ["ship1.png", "arrow.png", "flame1.png", "flame2.png", "flame3.png", "flame4.png", "flame5.png", "flame6.png"]) {
 	express.get(`/Art/${file}`, function (request, response) {
 		response.sendFile(PATH.join(__dirname + `/../../GUI/Art/${file}`));
 	});

@@ -420,85 +420,55 @@ class game {
 		return this._zoom;
 	}
 	set zoom(value) {
-		if (this._zoom != value) {
-			this._zoom = value;
-			this.getPlanets().then((positions) => {
-				let sun;
-				for (let index in this.planets) {
-					let planet = this.planets[index];
-					let stats: any = this.measure();
-					if ("sun" == index) {
-						// Create the sun in the center of the screen.
-						sun = $('#' + index).css({
-							top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
-							left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
-							height: `${this.zoom * planet.ratio}cm`,
-							width: `${this.zoom * planet.ratio}cm`,
-						}).css(["height", "width"]);
+		this._zoom = value;
+		this.getPlanets().then((positions) => {
+			let sun;
+			for (let index in this.planets) {
+				let planet = this.planets[index];
+				let stats: any = this.measure();
+				if ("sun" == index) {
+					// Create the sun in the center of the screen.
+					sun = $('#' + index).css({
+						top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+						left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
+						height: `${this.zoom * planet.ratio * stats.height * 5}px`,
+						width: `${this.zoom * planet.ratio * stats.height * 5}px`,
+					});
 
-						sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
-						sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
-						sun.height = this.zoom * planet.ratio;
-						sun.width = this.zoom * planet.ratio;
+					sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+					sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
+					sun.height = this.zoom * planet.ratio * stats.height * 5;
+					sun.width = this.zoom * planet.ratio * stats.height * 5;
 
-					} else {
-						$('#' + index).css({
-							top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
-							left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
-							height: `${this.zoom * planet.ratio}cm`,
-							width: `${this.zoom * planet.ratio}cm`,
+					if (index == this.zoomTo) {
+						$('#gameMap').css({
+							top: `-${+sun.top - ((stats.height * 50) - (sun.height / 2))}px`,
+							left: `-${+sun.left - ((stats.width * 50) - (sun.width / 2))}px`,
+						});
+					}
+				} else {
+					$('#' + index).css({
+						top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+						left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
+						height: `${this.zoom * planet.ratio * stats.height * 5}px`,
+						width: `${this.zoom * planet.ratio * stats.height * 5}px`,
+					});
+
+					let dimensions: { top: number, left: number, height: number, width: number } = {};
+					dimensions.top = (Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))));
+					dimensions.left = (Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))));
+					dimensions.height = this.zoom * planet.ratio * stats.height * 5;
+					dimensions.width = this.zoom * planet.ratio * stats.height * 5;
+
+					if (index == this.zoomTo) {
+						$('#gameMap').css({
+							top: `-${+dimensions.top - ((stats.height * 50) - (dimensions.height / 2))}px`,
+							left: `-${+dimensions.left - ((stats.width * 50) - (dimensions.width / 2))}px`,
 						});
 					}
 				}
-			});
-		} else {
-			this.getPlanets().then((positions) => {
-				let sun: any;
-				for (let index in this.planets) {
-					let planet = this.planets[index];
-					let stats: any = this.measure();
-					if ("sun" == index) {
-
-						// Create the sun in the center of the screen.
-						sun = $('#' + index)
-							.css({
-								top: `${((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
-								left: `${((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10)}px`,
-							}).css(["height", "width"]);
-
-						sun.top = ((50 * Number(stats.height) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
-						sun.left = ((50 * Number(stats.width) * this.zoom) - (this.zoom * planet.ratio / 2) + 3000000).toFixed(10);
-						sun.height = this.zoom * planet.ratio;
-						sun.width = this.zoom * planet.ratio;
-
-						if (index == this.zoomTo) {
-							$('#gameMap').css({
-								top: `-${+sun.top - ((stats.height * 50) - (sun.height / 2))}px`,
-								left: `-${+sun.left - ((stats.width * 50) - (sun.width / 2))}px`,
-							});
-						}
-					} else {
-						$('#' + index).animate({
-							top: `${(Number(+sun.top) + (Number(sun.height) / 2) - (this.zoom * planet.ratio / 2) + (Math.cos(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
-							left: `${(Number(+sun.left) + (Number(sun.width) / 2) - (this.zoom * planet.ratio / 2) + (Math.sin(positions[index].angle) * ((this.distances * this.zoom * planet.auRatio))))}px`,
-						}, /* !CONFIG */ 1000 / 1, "linear");
-						let dimensions: any = $('#' + index).css(["top", "left", "height", "width"]);
-
-						// Get the top and left of the sun so we can offset from the point + half the suns height/width
-						for (let key in dimensions) {
-							dimensions[key] = Number(dimensions[key].replace(/px/gi, '')).toFixed(10);
-						}
-
-						if (index == this.zoomTo) {
-							$('#gameMap').css({
-								top: `-${+dimensions.top - ((stats.height * 50) - (dimensions.height / 2))}px`,
-								left: `-${+dimensions.left - ((stats.width * 50) - (dimensions.width / 2))}px`,
-							});
-						}
-					}
-				}
-			});
-		}
+			}
+		});
 	}
 
 	// Connects to the game server and starts actually playing the game
@@ -1392,14 +1362,20 @@ class game {
 		</div>`));
 		$('#shipBox').css($('#' + this.zoomTo).css(["position", "top", "left"]));
 
+		$('#shipBox').css({
+			height: "0px",
+			widht: "0px",
+		});
+
 		$('#myShip').css({
-			position: "realative",
-			top: "0px",
-			left: "0px",
+			display: "block",
+			position: "absolute",
 			"z-index": 1,
 			"background-image": `url(${this.resource.myShip})`,
-			height: "87px",
-			width: "297px",
+			height: "97px",
+			width: "162px",
+			top: `-${97 / 2}px`,
+			left: `-${162 / 2}px`,
 		});
 
 		this.zoomTo = "myShip";
@@ -1437,6 +1413,26 @@ class game {
 					this.ship.cargo["Liquid Methane (CH4)"].stock -= consumed;
 					this.ship.mass -= (forceUsed / this.goodsLookup["Liquid Methane (CH4)"].force) * this.goodsLookup["Liquid Methane (CH4)"].mass;
 					// Ship should accellerate
+
+					// $('#shipBox').append($.parseHTML(`
+					// 	<img class="flame1" src="/Art/flame${Math.ceil(Math.random() * 6)}.png>
+					// 	<img class="flame2" src="/Art/flame${Math.ceil(Math.random() * 6)}.png>
+					// `));
+					
+					$('#shipBox').append($.parseHTML(`
+						<img class="flame1" src="/Art/flame1.png>
+						<img class="flame2" src="/Art/flame1.png>
+					`));
+					
+					$(`#flame1`).css({
+						position: "absolute",
+						"z-index": 1,
+						top: `-${97 / 2}px`,
+						left: `-${162 / 2}px`,
+						transform: `rotate(${this.ship.rotation}deg)`
+					});
+					
+
 					break;
 				} else {
 					this.message("You have run out of fuel, Hopefully you can coast into an orbit.");
@@ -1506,8 +1502,8 @@ class game {
 		measure.remove();
 
 		$('#gameMap').css({
-			top: `-${+shipBox.top - ((stats.height * 50) - (shipBox.height / 2))}px`,
-			left: `-${+shipBox.left - ((stats.width * 50) - (shipBox.width / 2))}px`,
+			top: `-${+shipBox.top - (stats.height * 50)}px`,
+			left: `-${+shipBox.left - (stats.width * 50)}px`,
 		});
 	}
 
@@ -1613,12 +1609,12 @@ class game {
 
 			$(`#shipImg${key}`).css({
 				position: "relative",
-				top: `0px`,
-				left: `0px`,
 				"z-index": 1,
 				"background-image": `url(${this.resource.myShip})`,
-				height: "87px",
-				width: "297px",
+				height: "97px",
+				width: "162px",
+				top: `-${97 / 2}px`,
+				left: `-${162 / 2}px`,
 				transform: `rotate(${ship.angle}deg)`
 			});
 
@@ -1648,14 +1644,15 @@ class game {
 		var angleDeg = Math.atan2(+dest.top - +ship.top, +dest.left - +ship.left) * 180 / Math.PI;
 
 		$('#arrow').css({
+			display: "block",
 			position: "relative",
-			top: "0px",
-			left: "0px",
-			"z-index": 2,
+			"z-index": 0,
 			transform: `rotate(${angleDeg}deg)`,
 			"background-image": `url(${this.resource.arrow})`,
-			width: "486px",
+			top: `-${78 / 2}px`,
 			height: "78px",
+			left: `-${486 / 2}px`,
+			width: "486px",
 		});
 
 		this.updateNavigation();
