@@ -22,14 +22,14 @@ class game {
 	planet: any = {
 		wealth: 0,
 		goods: [
-			{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
-			{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 0 },
-			{ name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 0 },
-			{ name: "Proteins", mass: 3500, price: 10, stock: 100 },
-			{ name: "People", mass: 1500, price: 20, stock: 100 },
-			{ name: "Sugars (C6H12O6)", mass: 2000, price: 2, stock: 100 },
-			{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 0 },
-			{ name: "Water (H2O)", mass: 1000, price: 40, stock: 100 },
+			{ shortName: "Air", name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
+			{ shortName: "Iron", name: "Iron (Fe)", mass: 7873, price: 10, stock: 0 },
+			{ shortName: "Methane", name: "Liquid Methane (CH4)", mass: 424, price: 0, stock: 0 },
+			{ shortName: "Protein", name: "Protein", mass: 3500, price: 10, stock: 100 },
+			{ shortName: "Population", name: "People", mass: 1500, price: 20, stock: 100 },
+			{ shortName: "Sugar", name: "Sugar (C6H12O6)", mass: 2000, price: 2, stock: 100 },
+			{ shortName: "Acid", name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 0, stock: 0 },
+			{ shortName: "Water", name: "Water (H2O)", mass: 1000, price: 40, stock: 100 },
 		],
 		buildings: {
 			water: {
@@ -63,13 +63,13 @@ class game {
 				level: 0
 			},
 			protein: {
-				name: "Proteins",
+				name: "Protein",
 				shortName: "Protein",
 				index: 3,
 				level: 0
 			},
 			sugar: {
-				name: "Sugars (C6H12O6)",
+				name: "Sugar (C6H12O6)",
 				shortName: "Sugar",
 				index: 5,
 				level: 0
@@ -85,9 +85,9 @@ class game {
 			"Air (N2 + O2 + CO2)": { stock: 0 },
 			"Iron (Fe)": { stock: 0 },
 			"Liquid Methane (CH4)": { stock: 100 },
-			"Proteins": { stock: 0 },
+			"Protein": { stock: 0 },
 			"People": { stock: 0 },
-			"Sugars (C6H12O6)": { stock: 0 },
+			"Sugar (C6H12O6)": { stock: 0 },
 			"Sulphuric Acid (H2SO4)": { stock: 0 },
 			"Water (H2O)": { stock: 0 },
 		},
@@ -162,14 +162,14 @@ class game {
 			index: 4,
 			mass: 1500
 		},
-		"Proteins": {
-			name: "Proteins",
+		"Protein": {
+			name: "Protein",
 			shortName: "Protein",
 			index: 3,
 			mass: 3500
 		},
-		"Sugars (C6H12O6)": {
-			name: "Sugars (C6H12O6)",
+		"Sugar (C6H12O6)": {
+			name: "Sugar (C6H12O6)",
 			shortName: "Sugar",
 			index: 5,
 			mass: 2000
@@ -240,7 +240,7 @@ class game {
 		},
 		Protein: {
 			name: "Protein",
-			longName: "Proteins",
+			longName: "Protein",
 			cost: 10,
 			production: 1,
 			uses: ["Air", "Sugar", "Water"],
@@ -248,7 +248,7 @@ class game {
 		},
 		Sugar: {
 			name: "Sugar",
-			longName: "Sugars (C6H12O6)",
+			longName: "Sugar (C6H12O6)",
 			cost: 10,
 			production: 1,
 			uses: ["Air", "Water", "Iron"],
@@ -283,7 +283,8 @@ class game {
 				img: `Planets/sphere/sun.png`,
 				texture: `Planets/Textures/sun.jpg`,
 				flavorText: "The Sun is well known for it's incredible HotPot.",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 			mercury: {
 				radius: 2439,
@@ -293,7 +294,8 @@ class game {
 				img: `Planets/sphere/mercury.png`,
 				texture: `Planets/Textures/mercury.jpg`,
 				flavorText: "Mercury is in a tidal lock with the Sun, meaning that one face is always to the sun, same as the Earths moon only ever shows one side to the earth. This has led to a unique growing environment for foods, which are cultivated in the sunset ring, on the edge of day and night.  An abundance of solar energe has made this world an exporter of all kinds of raw elements.  Especially Alumnimum which requires vast amounts of energy to refine.",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 			venus: {
 				radius: 6051,
@@ -303,7 +305,8 @@ class game {
 				img: `Planets/sphere/venus.png`,
 				texture: `Planets/Textures/venus.jpg`,
 				flavorText: "Since it's impossible to reach the surface of Venus, all the cities here are built around giant inflated bladders, keeping the city aloft in the high atmosphere of Venus. The unparalelled views are equaled only by the fine dining experiences to be had.  This is a tourist hotspot, and a good source of Sulphuric Acid and other gassius compounds.",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 			earth: {
 				radius: 6051,
@@ -313,7 +316,8 @@ class game {
 				img: `Planets/sphere/earth.png`,
 				texture: `Planets/Textures/earth.jpg`,
 				flavorText: "Earth used to be the only habbitable world, hoever that changed when humanity set foot in the stars.  Now Earth is a land of riches, the early days of space exploration were kind to investors on Earth, and all major industry was moved off planet.  Lush and peaceful this world now boasts little export, but thrives regardless from the investments made in the early days of space.  Many tourists depart from earth to spend their fortune throughout the solar system.",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 			mars: {
 				radius: 3396,
@@ -323,7 +327,8 @@ class game {
 				img: `Planets/sphere/mars.png`,
 				texture: `Planets/Textures/mars.jpg`,
 				flavorText: "Mars has always been the Red Planet.  That red colour comes from high concentrations of Iron oxides in the planets crust.  So much in fact, that Iron can be collected as nuggets right off the planets surface.  An absolute abundance of metal ores is helping Mars to build an export economy speciallising in ore, and once refined, it's shipped back to Mars for further manufacturing into equipment for all industries (especially space exploration).",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 			jupiter: {
 				radius: 71492,
@@ -333,7 +338,8 @@ class game {
 				img: `Planets/sphere/jupiter.png`,
 				texture: `Planets/Textures/jupiter.jpg`,
 				flavorText: "Jupiter is a Gas Giant, it's impossible to land here, but science and humanity have taken great interest in Jupiter.  Space stations orbit this Gas Giant conductin all manner of research, with stellar views and a long journey for investigators and journalists, Jupiter is the perfect place for Labs to experiment with the more 'unusual' sciences.",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 			saturn: {
 				radius: 60268,
@@ -343,7 +349,8 @@ class game {
 				img: `Planets/sphere/saturn.png`,
 				texture: `Planets/Textures/saturn.jpg`,
 				flavorText: "Saturn became \"The place\" for weddings when an ice meteor was captured by the gravity of Saturn, making Saturn look like it's wearing a Gigantic Diamond!  What better way to win a womans heart than dragging her to the farthest reaches of human civilisation.  There's nothing out here except for Tourists and small businesses that cater to them.  A good trade in Flowers and food is to be had at this far reach of the solar system.",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 			uranus: {
 				radius: 25559,
@@ -353,7 +360,8 @@ class game {
 				img: `Planets/sphere/uranus.png`,
 				texture: `Planets/Textures/uranus.jpg`,
 				flavorText: "Noone visits Uranus, the jokes are far too much for any person to bare for the extremely long journey.  The few people to be found out this far, are normally on the run, or are turning a high profit from those on the run.  While there is money to be made, there's also a risk of losing your life or your ship!",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 			neptune: {
 				radius: 24764,
@@ -363,7 +371,8 @@ class game {
 				img: `Planets/sphere/neptune.png`,
 				texture: `Planets/Textures/neptune.jpg`,
 				flavorText: "Neptune is the furthers that Humanity has travelled.  Out this far there are only a few Science stations and listening posts.  In the hope of making contact with Aliens and number of new religions exist out this far, mainly founded by Scientists who have found the pressure of working so far from the rest of humanity to be too much.  Little money is to be made comming here, but leaving and going back into the solar system will yield a high reward for those who can make the trip.",
-				zoom: 900
+				zoom: 900,
+				goods: undefined,
 			},
 		}
 
@@ -483,6 +492,14 @@ class game {
 	// Takes you to a tutorial - Most likely a YouTube video
 	async tutorial() {
 		let menu = this.createMenu();
+		
+		$('#menu').css({
+			"overflow-x": "hidden",
+			"overflow-y": "scroll",
+			"background-color": "RGBA(25,25,25,0.75)",
+			height: "75%",
+			width: "75%",
+		});
 
 		createHeading: {
 			menu.append($.parseHTML(`<h1>TL;DR;</h1>
@@ -522,6 +539,25 @@ class game {
 			</p>`));
 			// $('#heading').text("Welcome to Elon-zo").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 		}
+		
+		let login = document.createElement('button');
+		login.setAttribute("id", "loginButton");
+		login.setAttribute('onclick', 'game.showMenu()');
+		menu.append(login);
+
+		let loginButton = $('#loginButton');
+		loginButton.text("Back");
+		loginButton.css({
+			border: "3px solid goldenrod",
+
+			height: "1cm",
+			width: "100%",
+			margin: "3px 0px",
+
+			"text-align": "center",
+			"font-size": "1.5em",
+			color: "goldenrod"
+		});
 	}
 
 	// Will be a link to the Wiki or similar things
@@ -887,22 +923,20 @@ class game {
 				"Air (N2 + O2 + CO2)": { stock: 0 },
 				"Iron (Fe)": { stock: 0 },
 				"Liquid Methane (CH4)": { stock: 0 },
-				"Proteins": { stock: 0 },
+				"Protein": { stock: 0 },
 				"People": { stock: 0 },
-				"Sugars (C6H12O6)": { stock: 0 },
+				"Sugar (C6H12O6)": { stock: 0 },
 				"Sulphuric Acid (H2SO4)": { stock: 0 },
 				"Water (H2O)": { stock: 0 },
 			},
 			wealth: 0,
 		});
-		console.log(this.ship);
 	}
 
 	async newCity(planet) {
-		console.log("d7e34205-0dfb-5aa3-81e5-2ddd4f9d130f");
-		let menu = this.createMenu();
 
-		console.log(planet);
+		console.log("d7e34205-0dfb-5aa3-81e5-2ddd4f9d130f");
+		this.createMenu();
 
 		weightCode: {
 			this.docked = true;
@@ -925,6 +959,9 @@ class game {
 			this.factoryWork();
 			this.updateServer();
 		}, 5000);
+
+		// Populate the this.planets.goods field.
+		this.getPopulation(this.zoomTo);
 	}
 
 	async settlementMenu(planet) {
@@ -968,26 +1005,25 @@ class game {
 					[Population: ${data.planet.population}] ---- 
 					[Air: ${data.planet.air}] ---- 
 					[Protein: ${data.planet.protein}] ---- 
-					[Sugars: ${data.planet.sugars}] ---- 
+					[Sugar: ${data.planet.sugar}] ---- 
 					[Water: ${data.planet.water}] ---- 
-					[Acids: ${data.planet.acids}] ---- 
+					[Acid: ${data.planet.acid}] ---- 
 					[Iron: ${data.planet.iron}] ---- 
 					[Methane: ${data.planet.methane}] ---- 
-					[Wealth: ${data.planet.wealth}]`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+					[Wealth: ${data.planet.wealth.toFixed(2)}]`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 				});
 			}, 10 * 1000);
 			this.getPopulation(planet).then((data: any) => {
-				console.log(data);
 				$('#planetDetails').text(`Planet Details: 
 				[Population: ${data.planet.population}] ---- 
 				[Air: ${data.planet.air}] ---- 
 				[Protein: ${data.planet.protein}] ---- 
-				[Sugars: ${data.planet.sugars}] ---- 
+				[Sugar: ${data.planet.sugar}] ---- 
 				[Water: ${data.planet.water}] ---- 
-				[Acids: ${data.planet.acids}] ---- 
+				[Acid: ${data.planet.acid}] ---- 
 				[Iron: ${data.planet.iron}] ---- 
 				[Methane: ${data.planet.methane}] ---- 
-				[Wealth: ${data.planet.wealth}]`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+				[Wealth: ${data.planet.wealth.toFixed(2)}]`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 			});
 
 			p = document.createElement('p');
@@ -1000,12 +1036,12 @@ class game {
 					[Population: ${Number(this.planet.goods[4].stock).toFixed(2)}] ---- 
 					[Air: ${Number(this.planet.goods[0].stock).toFixed(2)}] ---- 
 					[Protein: ${Number(this.planet.goods[3].stock).toFixed(2)}] ---- 
-					[Sugars: ${Number(this.planet.goods[5].stock).toFixed(2)}] ---- 
+					[Sugar: ${Number(this.planet.goods[5].stock).toFixed(2)}] ---- 
 					[Water: ${Number(this.planet.goods[7].stock).toFixed(2)}] ---- 
-					[Acids: ${Number(this.planet.goods[6].stock).toFixed(2)}] ---- 
+					[Acid: ${Number(this.planet.goods[6].stock).toFixed(2)}] ---- 
 					[Iron: ${Number(this.planet.goods[1].stock).toFixed(2)}] ---- 
 					[Methane: ${Number(this.planet.goods[2].stock).toFixed(2)}] ---- 
-					[Wealth: ${this.planet.wealth}]
+					[Wealth: ${this.planet.wealth.toFixed(2)}]
 				`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 			}, 1000);
 			$('#cityDetails').text(`
@@ -1013,12 +1049,12 @@ class game {
 				[Population: ${Number(this.planet.goods[4].stock).toFixed(2)}] ---- 
 				[Air: ${Number(this.planet.goods[0].stock).toFixed(2)}] ---- 
 				[Protein: ${Number(this.planet.goods[3].stock).toFixed(2)}] ---- 
-				[Sugars: ${Number(this.planet.goods[5].stock).toFixed(2)}] ---- 
+				[Sugar: ${Number(this.planet.goods[5].stock).toFixed(2)}] ---- 
 				[Water: ${Number(this.planet.goods[7].stock).toFixed(2)}] ---- 
-				[Acids: ${Number(this.planet.goods[6].stock).toFixed(2)}] ---- 
+				[Acid: ${Number(this.planet.goods[6].stock).toFixed(2)}] ---- 
 				[Iron: ${Number(this.planet.goods[1].stock).toFixed(2)}] ---- 
 				[Methane: ${Number(this.planet.goods[2].stock).toFixed(2)}] ---- 
-				[Wealth: ${this.planet.wealth}]
+				[Wealth: ${this.planet.wealth.toFixed(2)}]
 			`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 
 			p = document.createElement('p');
@@ -1029,7 +1065,7 @@ class game {
 
 		showFactoryIcons: {
 			menu.append($.parseHTML(`
-				<div>
+				<div class="factoryBox">
 					${(this.planetLookup[this.zoomTo].factories.includes("water") ? `
 					<div class="factory" id="factoryWater" style="width: ${(100 / this.planetLookup[this.zoomTo].factories.length) - 1}%;">
 						<h3>Produce Water at this factory</h3><p>requires: A world with water</p>
@@ -1133,12 +1169,12 @@ class game {
 					for (let item of goods) {
 						let p = $.parseHTML(`
 						<p data='${JSON.stringify(item)}'><strong style="font-size: 1.25em;">1 unit of ${item.name} for ${item.price} credit(s) (Mass:${item.mass})</strong><br />
-							In Stock: ${Number(item.stock).toFixed(0)}
+							In Stock: <span class="stockPlanet${item.shortName}">${Number(item.stock).toFixed(0)}</span>
 								<button onclick="game.buyGoods('${item.name}', 1, '${planet}')">Buy 1</button>
 								<button onclick="game.buyGoods('${item.name}', 10, '${planet}')">Buy 10</button>
 								<button onclick="game.buyGoods('${item.name}', 100, '${planet}')">Buy 100</button>
 							<br />
-							In Cargo: ${Number(this.planet.goods[this.goodsLookup[item.name].index].stock).toFixed(0)}
+							In Cargo: <span class="stock${item.shortName}">${Number(this.planet.goods[this.goodsLookup[item.name].index].stock).toFixed(0)}</span>
 								<button onclick="game.sellGoods('${item.name}', 1, '${planet}')">Sell 1</button>
 								<button onclick="game.sellGoods('${item.name}', 10, '${planet}')">Sell 10</button>
 								<button onclick="game.sellGoods('${item.name}', 100, '${planet}')">Sell 100</button>
@@ -1154,7 +1190,18 @@ class game {
 				});
 		}
 
-		// TODO: Back button.
+		placeAnOrder: {
+			let button = document.createElement('button');
+			menu.append($.parseHTML(`<button id="placeOrderButton" onclick="game.placeOrderWindow()"></button`));
+
+			let buttonLive = $('#placeOrderButton');
+			buttonLive.text("Place an interplanitary order");
+			buttonLive.css({
+				height: "1cm",
+				width: "100%",
+			});
+		}
+
 		bakcButton: {
 			let button = document.createElement('button');
 			button.setAttribute("id", "back");
@@ -1339,8 +1386,6 @@ class game {
 
 		// Play some landing sound here, and the unique sounds for this nation.
 
-		console.log(planet);
-
 		this.docked = true;
 
 		this.zoomTo = planet;
@@ -1361,12 +1406,11 @@ class game {
 			<div id="myShip"></div>
 		</div>`));
 		$('#shipBox').css($('#' + this.zoomTo).css(["position", "top", "left"]));
-
 		$('#shipBox').css({
 			height: "0px",
 			widht: "0px",
 		});
-
+		
 		$('#myShip').css({
 			display: "block",
 			position: "absolute",
@@ -1377,8 +1421,10 @@ class game {
 			top: `-${97 / 2}px`,
 			left: `-${162 / 2}px`,
 		});
-
+		
 		this.zoomTo = "myShip";
+		
+		$('#gameMap').append($.parseHTML(`<img class="smoke" src="/Art/smoke.png">`))
 
 		this.shipView = setInterval(() => {
 			this.focusShip();
@@ -1398,12 +1444,11 @@ class game {
 	}
 
 	async keyboard(event) {
-		console.log(event.key);
 		switch (event.key) {
 			case "ArrowUp": {
 				// The player can consume just slightly more fuel than exists, but that's ok for a game.
 				if (this.ship.cargo["Liquid Methane (CH4)"].stock >= 0) {
-					console.log("ArrowUp");
+					// console.log("ArrowUp");
 					this.ship.velocity++;
 
 					// Fuel consumption and mass reduction
@@ -1419,19 +1464,25 @@ class game {
 					// 	<img class="flame2" src="/Art/flame${Math.ceil(Math.random() * 6)}.png>
 					// `));
 					
-					$('#shipBox').append($.parseHTML(`
-						<img class="flame1" src="/Art/flame1.png>
-						<img class="flame2" src="/Art/flame1.png>
-					`));
-					
-					$(`#flame1`).css({
-						position: "absolute",
-						"z-index": 1,
-						top: `-${97 / 2}px`,
-						left: `-${162 / 2}px`,
-						transform: `rotate(${this.ship.rotation}deg)`
+					$('.smoke').css({
+						margin: "-35px -50px 0px 0px"
 					});
-					
+					$('.smoke').css($('#shipBox').css(["top", "left", "position"]));
+					$('.smoke').fadeOut(1000).delay(1000);
+
+					// $('#shipBox').append($.parseHTML(`
+					// 	<img class="flame1" src="/Art/flame1.png>
+					// 	<img class="flame2" src="/Art/flame1.png>
+					// `));
+
+					// $(`#flame1`).css({
+					// 	position: "absolute",
+					// 	"z-index": 1,
+					// 	top: `-${97 / 2}px`,
+					// 	left: `-${162 / 2}px`,
+					// 	transform: `rotate(${this.ship.rotation}deg)`
+					// });
+
 
 					break;
 				} else {
@@ -1441,7 +1492,7 @@ class game {
 			case "ArrowDown": {
 				// The player can consume just slightly more fuel than exists, but that's ok for a game.
 				if (this.ship.cargo["Liquid Methane (CH4)"].stock >= 0) {
-					console.log("ArrowDown");
+					// console.log("ArrowDown");
 					this.ship.velocity--;
 
 					// Fuel consumption and mass reduction
@@ -1457,19 +1508,18 @@ class game {
 				}
 			}
 			case "ArrowLeft": {
-				console.log("ArrowLeft");
+				// console.log("ArrowLeft");
 				// Ship sould rotate left
 				this.ship.rotation = (this.ship.rotation - (1 + (this.ship["Attitude Control"].value / 25))) % 360;
 				break;
 			}
 			case "ArrowRight": {
-				console.log("ArrowRight");
+				// console.log("ArrowRight");
 				// Ship should rotate right
 				this.ship.rotation = (this.ship.rotation + (1 + (this.ship["Attitude Control"].value / 25))) % 360;
 				break;
 			}
 		}
-		console.log(this.ship);
 	}
 
 	async focusShip() {
@@ -1517,7 +1567,7 @@ class game {
 
 	async updateGovernor() {
 		let prom = new Promise((resolve, reject) => {
-			$.post('/updateCity', { accId: this.accountName, planet: this.zoomTo, city: this.planet, pay: this.pay }, resolve);
+			$.post('updateCity', { accId: this.accountName, planet: this.zoomTo, city: this.planet, pay: this.pay }, resolve);
 			this.pay = 0;
 		});
 
@@ -1540,7 +1590,7 @@ class game {
 				velocity: this.ship.velocity
 			}
 			let prom = new Promise((resolve, reject) => {
-				$.post('/updatePosition', { accId: this.accountName, position }, resolve);
+				$.post('updatePosition', { accId: this.accountName, position }, resolve);
 			});
 
 			prom.catch((e) => {
@@ -1709,7 +1759,7 @@ class game {
 			let p = document.createElement('p');
 			p.setAttribute("id", "population")
 			menu.append(p);
-			console.log(planet);
+
 			this.getPopulation(planet).then((data: any) => {
 				$('#population').text(`Population: ${data.population}`).css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
 			});
@@ -1845,13 +1895,10 @@ class game {
 			});
 			this.getUpgradeList(planet)
 				.then((upgrades: any) => {
-					console.log(upgrades);
 					// [{ name: "Attitude Control", cost: 4, mass: 7873 / 10 }]
 					let upgradeList = $('#upgradeList')
 					for (let key in upgrades) {
-						console.log(key);
 						let item = upgrades[key];
-						console.log(item);
 						let p = $.parseHTML(
 							'<div style="width: 100%;">' +
 							item.name + ' ' +
@@ -1989,13 +2036,23 @@ class game {
 			});
 			this.getBuyGoods(planet)
 				.then((goods: any) => {
-					console.log(goods);
 					let buyList = $('#buyList')
 					for (let item of goods) {
-						console.log(item);
-						let p = $.parseHTML(`<p data='${JSON.stringify(item)}'><strong style="font-size: 1.25em;">1 unit of ${item.name} for ${item.price} credit(s) (Mass:${item.mass})</strong><br />
-						In Stock: ${Number(item.stock).toFixed(0)}<button onclick="game.buyGoods('${item.name}', 1, '${planet}')">Buy 1</button><button onclick="game.buyGoods('${item.name}', 10, '${planet}')">Buy 10</button><button onclick="game.buyGoods('${item.name}', 100, '${planet}')">Buy 100</button><br />
-						In Cargo: ${Number(this.ship.cargo[item.name].stock).toFixed(0)}<button onclick="game.sellGoods('${item.name}', 1, '${planet}')">Sell 1</button><button onclick="game.sellGoods('${item.name}', 10, '${planet}')">Sell 10</button><button onclick="game.sellGoods('${item.name}', 100, '${planet}')">Sell 100</button>
+						let p = $.parseHTML(`
+						<p data='${JSON.stringify(item)}'>
+							<strong style="font-size: 1.25em;">
+								1 unit of ${item.name} for ${item.price} credit(s) (Mass:${item.mass})
+							</strong>
+						<br />
+						In Stock: <span class="stockPlanet${item.shortName}">${Number(item.stock).toFixed(0)}</span>
+						<button onclick="game.buyGoods('${item.name}', 1, '${planet}')">Buy 1</button>
+						<button onclick="game.buyGoods('${item.name}', 10, '${planet}')">Buy 10</button>
+						<button onclick="game.buyGoods('${item.name}', 100, '${planet}')">Buy 100</button>
+						<br />
+						In Cargo: <span class="stockShip${item.shortName}">${Number(this.ship.cargo[item.name].stock).toFixed(0)}</span>
+						<button onclick="game.sellGoods('${item.name}', 1, '${planet}')">Sell 1</button>
+						<button onclick="game.sellGoods('${item.name}', 10, '${planet}')">Sell 10</button>
+						<button onclick="game.sellGoods('${item.name}', 100, '${planet}')">Sell 100</button>
 						</p><hr/>`);
 						buyList.append(p);
 					}
@@ -2052,7 +2109,7 @@ class game {
 	}
 
 	async buyGoods(item, quantity, planet) {
-		if (quantity < this.getCargoNow() || "Governor" == this.career) {
+		if (quantity <= this.getCargoNow() || "Governor" == this.career) {
 			let prom = new Promise((resolve, reject) => {
 				let wealth;
 				if ("Captain" == this.career) {
@@ -2060,7 +2117,7 @@ class game {
 				} else if ("Governor" == this.career) {
 					wealth = this.planet.wealth;
 				}
-				$.post('/buyGoods', { item, quantity, planet, wealth }, resolve);
+				$.post('buyGoods', { item, quantity, planet, wealth }, resolve);
 			});
 
 			prom.then((data: { name: string, price: string, mass: string, stock: string, message?: string }) => {
@@ -2077,14 +2134,19 @@ class game {
 						this.ship.mass += mass * stock;
 						this.ship.wealth -= price * stock;
 
-						// Refresh the view
-						this.buyGoodsView(this.zoomTo);
+						let oldStock = $(`.stockPlanet${this.planet.goods[this.goodsLookup[name].index].shortName}`).text();
+						$(`.stockPlanet${this.planet.goods[this.goodsLookup[name].index].shortName}`).text(Number(oldStock) - stock);
+
+						oldStock = $(`.stockShip${this.planet.goods[this.goodsLookup[name].index].shortName}`).text();
+						$(`.stockShip${this.planet.goods[this.goodsLookup[name].index].shortName}`).text(Number(oldStock) + stock);
+
 					} else if ("Governor" == this.career) {
 						this.planet.goods[this.goodsLookup[name].index].stock += stock;
 						this.planet.wealth -= price * stock;
 
-						// Refresh the view
-						this.buyGoodsCityView(this.zoomTo);
+						this.planets[this.zoomTo].goods[this.goodsLookup[name].shortName.toLowerCase()] -= stock;
+						$(`.stockPlanet${this.planet.goods[this.goodsLookup[name].index].shortName}`)
+							.text(Math.floor(this.planets[this.zoomTo].goods[this.goodsLookup[name].shortName.toLowerCase()]));
 					}
 
 					this.message("Transaction complete");
@@ -2104,9 +2166,9 @@ class game {
 	}
 
 	async sellGoods(item, quantity, planet) {
-		if (quantity < this.ship.cargo[item].stock || ("Governor" == this.career && quantity < this.planet.goods[this.goodsLookup[item].index].stock)) {
+		if (quantity <= this.ship.cargo[item].stock || ("Governor" == this.career && quantity < this.planet.goods[this.goodsLookup[item].index].stock)) {
 			let prom = new Promise((resolve, reject) => {
-				$.post('/sellGoods', { item, quantity, planet }, resolve);
+				$.post('sellGoods', { item, quantity, planet }, resolve);
 			});
 
 			prom.then((result: { message?: string, name: string, price: string, mass: string, stock: string }) => {
@@ -2123,14 +2185,19 @@ class game {
 						this.ship.mass -= mass * stock;
 						this.ship.wealth += price * stock;
 
-						// Refresh the view
-						this.buyGoodsView(this.zoomTo);
+						let oldStock = $(`.stockPlanet${this.planet.goods[this.goodsLookup[name].index].shortName}`).text();
+						$(`.stockPlanet${this.planet.goods[this.goodsLookup[name].index].shortName}`).text(Number(oldStock) + stock);
+
+						oldStock = $(`.stockShip${this.planet.goods[this.goodsLookup[name].index].shortName}`).text();
+						$(`.stockShip${this.planet.goods[this.goodsLookup[name].index].shortName}`).text(Number(oldStock) - stock);
+
 					} else if ("Governor" == this.career) {
 						this.planet.goods[this.goodsLookup[name].index].stock -= stock;
 						this.planet.wealth += price * stock;
 
-						// Refresh the view
-						this.buyGoodsCityView(this.zoomTo);
+						this.planets[this.zoomTo].goods[this.goodsLookup[name].shortName.toLowerCase()] += stock;
+						$(`.stockPlanet${this.planet.goods[this.goodsLookup[name].index].shortName}`)
+							.text(Math.floor(this.planets[this.zoomTo].goods[this.goodsLookup[name].shortName.toLowerCase()]));
 					}
 
 					this.message("Transaction complete");
@@ -2155,6 +2222,121 @@ class game {
 
 	async message(message) {
 		$.notify(message);
+	}
+
+	async placeOrderWindow() {
+		console.log("3fd546dd-ae82-5326-a524-1f7e4cceb353");
+		let menu = this.createMenu();
+		menu: {
+			$('#menu').css({
+				"background-image": `url("${this.planets[this.zoomTo].texture}")`,
+				"background-size": "cover",
+				"background-repeat": "repeat",
+				"overflow-x": "hidden",
+				"overflow-y": "auto",
+
+				width: "75%",
+				height: "75%",
+			});
+		}
+
+		createHeading: {
+			menu.append($.parseHTML(`<h1 id="heading"></h1>`));
+			$('#heading').text("Place an interplanitary order").css({ "background-color": "RGBA(25, 25, 25, 0.75)" });
+		}
+
+		createScrollList: {
+			let div = document.createElement('div');
+			div.setAttribute("id", "buyList")
+			menu.append(div);
+			let buyList = $('#buyList')
+			buyList.css({
+				height: "75%",
+				"overflow-y": "scroll",
+				"overflow-x": "hidden",
+				"background-color": "RGBA(25,25,25,0.75)"
+			});
+
+			for (let index in this.goodsLookup) {
+				let item = this.goodsLookup[index];
+				let p = $.parseHTML(`
+					<p data='${JSON.stringify(item)}'>
+						<strong style="font-size: 1.25em;">
+							I'll buy: <input type="number" style="width: 2cm;" class="orderInput ${index}" name="quantity"> unit(s) of ${item.name} for <input type="number" style="width: 2cm;" class="orderInput ${index}" name="price" value="${item.price}"> credit(s) each
+						</strong>
+					</p><hr/>`);
+				buyList.append(p);
+			}
+		}
+		
+		createButton: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "createOrderButton");
+			button.setAttribute('onclick', 'game.createOrder()');
+			menu.append(button);
+
+			let createOrderButton = $('#createOrderButton');
+			createOrderButton.text("Place Order");
+			createOrderButton.css({
+				border: "3px solid goldenrod",
+
+				height: "1cm",
+				width: "100%",
+				margin: "3px 0px",
+
+				"text-align": "center",
+				"font-size": "1.5em",
+				color: "goldenrod"
+			});
+		}
+
+		backButton: {
+			let button = document.createElement('button');
+			button.setAttribute("id", "back");
+			button.setAttribute('onclick', 'game.settlementMenu()');
+			menu.append(button);
+
+			let buttonLive = $('#back');
+			buttonLive.text("back");
+			buttonLive.css({
+				height: "1cm",
+				width: "100%",
+			});
+		}
+	}
+	
+	async createOrder() {
+		let orderDetails = [];
+		let part:any = {};
+		
+		let price = 0;
+		$('.orderInput').each((index, item) => {
+			if ((index) % 2 == 0) {
+				part.quantity = $(item).val();
+			} else {
+				part.price = $(item).val();
+				price += part.price;
+				
+				orderDetails.push(part);
+				part = {};
+			}
+		});
+		
+		let prom;
+		if (price <= this.planet.wealth) {
+			this.pay += price;
+			this.planet.wealth -= price;
+			
+			prom = new Promise((resolve, reject) => {
+				$.post('orders', {orderDetails, planet: this.zoomTo}, resolve)
+			});
+			
+			prom.then(this.message);
+		} else {
+			this.message("Not enough wealth to place the order");
+		}
+		
+		return prom;
 	}
 
 	async getOrders() {
@@ -2429,9 +2611,16 @@ class game {
 	}
 
 	async getPopulation(planet) {
-		return new Promise((resolve, reject) => {
+		let prom = new Promise((resolve, reject) => {
 			$.getJSON('/population', { planet }, resolve);
 		});
+
+		prom.then((data: any) => {
+			this.planets[planet].goods = data.planet;
+			return data;
+		});
+
+		return prom;
 	}
 
 	measure() {
@@ -2558,7 +2747,7 @@ class game {
 		$('.chatIn').val('');
 
 		let prom = new Promise((resolve, reject) => {
-			$.post('/chat', {
+			$.post('chat', {
 				chatIn,
 				accountId: this.accountId,
 				accountName: this.accountName,
@@ -2602,8 +2791,8 @@ class game {
 					case "Sulphuric Acid (H2SO4)":
 					case "Iron (Fe)":
 					case "Liquid Methane (CH4)":
-					case "Proteins":
-					case "Sugars (C6H12O6)":
+					case "Protein":
+					case "Sugar (C6H12O6)":
 						let use: any;
 						for (use of this.factoryLookup[fact.shortName].uses) {
 							if (this.planet.goods[this.planet.buildings[use.toLowerCase()].index].stock < fact.level) {
@@ -2636,11 +2825,11 @@ class game {
 					consume = 0.1 / 60;
 					break;
 				}
-				case "Sugars (C6H12O6)": {
+				case "Sugar (C6H12O6)": {
 					consume = 0.033 / 60;
 					break;
 				}
-				case "Proteins": {
+				case "Protein": {
 					consume = 0.05 / 60;
 					break;
 				}
@@ -2651,6 +2840,7 @@ class game {
 			}
 			if (consume) {
 				item.stock = Math.max(0, item.stock - this.planet.goods[4].stock * consume);
+				$(`.stock${item.shortName}`).text(Math.floor(item.stock));
 				if (item.stock == 0) {
 					grow = false;
 					// Don't kill the entire planet all at once, just 1% of the population...
@@ -2668,6 +2858,9 @@ class game {
 
 		if (0 == this.planet.goods[4].stock) {
 			this.lose();
+		} else {
+			// Earn money from keeping people alive.
+			this.planet.wealth += this.planet.goods[4].stock * 0.001;
 		}
 	}
 

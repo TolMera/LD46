@@ -12,8 +12,8 @@ const planets = {
 		methane: 0,
 		protein: 0,
 		population: 0,
-		sugars: 0,
-		acids: 0,
+		sugar: 0,
+		acid: 0,
 		water: 0,
 		players: {}
 	},
@@ -24,8 +24,8 @@ const planets = {
 		methane: 0,
 		protein: 0,
 		population: 0,
-		sugars: 0,
-		acids: 0,
+		sugar: 0,
+		acid: 0,
 		water: 0,
 		players: {}
 	},
@@ -36,8 +36,8 @@ const planets = {
 		methane: 0,
 		protein: 0,
 		population: 0,
-		sugars: 0,
-		acids: 0,
+		sugar: 0,
+		acid: 0,
 		water: 0,
 		players: {}
 	},
@@ -48,8 +48,8 @@ const planets = {
 		methane: 0,
 		protein: 0,
 		population: 0,
-		sugars: 0,
-		acids: 0,
+		sugar: 0,
+		acid: 0,
 		water: 0,
 		players: {}
 	},
@@ -60,8 +60,8 @@ const planets = {
 		methane: 0,
 		protein: 0,
 		population: 0,
-		sugars: 0,
-		acids: 0,
+		sugar: 0,
+		acid: 0,
 		water: 0,
 		players: {}
 	},
@@ -72,15 +72,15 @@ const planets = {
 		methane: 0,
 		protein: 0,
 		population: 0,
-		sugars: 0,
-		acids: 0,
+		sugar: 0,
+		acid: 0,
 		water: 0,
 		players: {}
 	},
 }
 const users = [];
 const orders: Array<{ to: string, type: string, quantity: number, price: number }> = [
-	// { to: "mars", type: "acids", quantity: 100, price: 1 },
+	// { to: "mars", type: "acid", quantity: 100, price: 1 },
 ];
 
 let EXPRESS = require('express');
@@ -129,7 +129,7 @@ for (let file of ["BeepBoxSong1.mp3", "BeepBoxSong2.mp3", "BeepBoxSong3.mp3", "B
 	});
 }
 
-for (let file of ["ship1.png", "arrow.png", "flame1.png", "flame2.png", "flame3.png", "flame4.png", "flame5.png", "flame6.png"]) {
+for (let file of ["ship1.png", "arrow.png", "flame1.png", "flame2.png", "flame3.png", "flame4.png", "flame5.png", "flame6.png", "smoke.png"]) {
 	express.get(`/Art/${file}`, function (request, response) {
 		response.sendFile(PATH.join(__dirname + `/../../GUI/Art/${file}`));
 	});
@@ -171,7 +171,48 @@ express.get('/orders', function (request, response) {
 	response.send(orders);
 });
 
+let ordersLookupIndex = ["iron", "methane", "acid", "water", "air", "people", "protein", "sugar"];
+
 express.post('/orders', function (request, response) {
+	let planet = request.body.planet;
+	let details = request.body.orderDetails
+
+	for (let index in details) {
+		if (details[index].quantity != "" && details[index].price != "") {
+			orders.push({ to: planet, type: ordersLookupIndex[index], quantity: details[index].quantity, price: details[index].price });
+
+			// TODO: Partially implemented, there should be an order forfillment service, where you can set the price of the goods you plan to buy/sell. So you can sell Iron for 30 buy it for 10 etc.
+			// But also make it so a colony can't set the pay low for the Captain bringing the goods in.  Buy the goods cheap, set the price high, sell the goods, and take all the money from the economy.
+			// switch (String(index)) {
+			// 	case "0":
+			// 		goods[planet][1].price = details[index].price;
+			// 		break;
+			// 	case "1":
+			// 		goods[planet][2].price = details[index].price;
+			// 		break;
+			// 	case "2":
+			// 		goods[planet][6].price = details[index].price;
+			// 		break;
+			// 	case "3":
+			// 		goods[planet][7].price = details[index].price;
+			// 		break;
+			// 	case "4":
+			// 		goods[planet][0].price = details[index].price;
+			// 		break;
+			// 	case "5":
+			// 		goods[planet][4].price = details[index].price;
+			// 		break;
+			// 	case "6":
+			// 		goods[planet][3].price = details[index].price;
+			// 		break;
+			// 	case "7":
+			// 		goods[planet][5].price = details[index].price;
+			// 		break;
+			// }
+		}
+	}
+
+	response.send({ success: true, message: "Order has been placed" });
 });
 
 
@@ -179,75 +220,86 @@ express.post('/orders', function (request, response) {
 const goods = {
 	mercury: [
 		// mercury: ["air", "iron", "methane", "protein", "sugar"],
-		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
-		{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 100 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 30, stock: 10000 },
-		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
-		{ name: "People", mass: 1500, price: 20, stock: planets["mercury"].population },
-		{ name: "Sugars (C6H12O6)", mass: 2000, price: 2, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
-		{ name: "Water (H2O)", mass: 1000, price: 40, stock: 100 },
+		{ shortName: "Air", name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, },
+		{ shortName: "Iron", name: "Iron (Fe)", mass: 7873, price: 10, },
+		{ shortName: "Methane", name: "Liquid Methane (CH4)", mass: 424, price: 30, },
+		{ shortName: "Protein", name: "Protein", mass: 3500, price: 10, },
+		{ shortName: "Population", name: "People", mass: 1500, price: 20, },
+		{ shortName: "Sugar", name: "Sugar (C6H12O6)", mass: 2000, price: 2, },
+		{ shortName: "Acid", name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, },
+		{ shortName: "Water", name: "Water (H2O)", mass: 1000, price: 40, },
 	],
 	venus: [
 		// venus: ["water", "air", "acid", "methane"],
-		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 3, stock: 100 },
-		{ name: "Iron (Fe)", mass: 7873, price: 1, stock: 0 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 20, stock: 10000 },
-		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
-		{ name: "People", mass: 1500, price: 10, stock: planets["venus"].population },
-		{ name: "Sugars (C6H12O6)", mass: 2000, price: 5, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 1000 },
-		{ name: "Water (H2O)", mass: 1000, price: 5, stock: 100 },
+		{ shortName: "Air", name: "Air (N2 + O2 + CO2)", mass: 870, price: 3, },
+		{ shortName: "Iron", name: "Iron (Fe)", mass: 7873, price: 1, },
+		{ shortName: "Methane", name: "Liquid Methane (CH4)", mass: 424, price: 20, },
+		{ shortName: "Protein", name: "Protein", mass: 3500, price: 10, },
+		{ shortName: "Population", name: "People", mass: 1500, price: 10, },
+		{ shortName: "Sugar", name: "Sugar (C6H12O6)", mass: 2000, price: 5, },
+		{ shortName: "Acid", name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, },
+		{ shortName: "Water", name: "Water (H2O)", mass: 1000, price: 5, },
 	],
 	earth: [
 		// earth: ["water", "air", "acid", "iron", "methane", "protein", "sugar"],
-		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 1, stock: 10000 },
-		{ name: "Iron (Fe)", mass: 7873, price: 15, stock: 0 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 10, stock: 10000 },
-		{ name: "Proteins", mass: 3500, price: 20, stock: 0 },
-		{ name: "People", mass: 1500, price: -10, stock: planets["earth"].population },
-		{ name: "Sugars (C6H12O6)", mass: 2000, price: 2, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
-		{ name: "Water (H2O)", mass: 1000, price: 1, stock: 10000 },
+		{ shortName: "Air", name: "Air (N2 + O2 + CO2)", mass: 870, price: 1, },
+		{ shortName: "Iron", name: "Iron (Fe)", mass: 7873, price: 15, },
+		{ shortName: "Methane", name: "Liquid Methane (CH4)", mass: 424, price: 10, },
+		{ shortName: "Protein", name: "Protein", mass: 3500, price: 20, },
+		{ shortName: "Population", name: "People", mass: 1500, price: -10, },
+		{ shortName: "Sugar", name: "Sugar (C6H12O6)", mass: 2000, price: 2, },
+		{ shortName: "Acid", name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, },
+		{ shortName: "Water", name: "Water (H2O)", mass: 1000, price: 1, },
 	],
 	mars: [
 		// mars: ["air", "iron", "methane", "sugar"],
-		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, stock: 100 },
-		{ name: "Iron (Fe)", mass: 7873, price: 10, stock: 1000 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 10, stock: 10000 },
-		{ name: "Proteins", mass: 3500, price: 20, stock: 0 },
-		{ name: "People", mass: 1500, price: 20, stock: planets["mars"].population },
-		{ name: "Sugars (C6H12O6)", mass: 2000, price: 1, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
-		{ name: "Water (H2O)", mass: 1000, price: 30, stock: 100 },
+		{ shortName: "Air", name: "Air (N2 + O2 + CO2)", mass: 870, price: 10, },
+		{ shortName: "Iron", name: "Iron (Fe)", mass: 7873, price: 10, },
+		{ shortName: "Methane", name: "Liquid Methane (CH4)", mass: 424, price: 10, },
+		{ shortName: "Protein", name: "Protein", mass: 3500, price: 20, },
+		{ shortName: "Population", name: "People", mass: 1500, price: 20, },
+		{ shortName: "Sugar", name: "Sugar (C6H12O6)", mass: 2000, price: 1, },
+		{ shortName: "Acid", name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, },
+		{ shortName: "Water", name: "Water (H2O)", mass: 1000, price: 30, },
 	],
 	uranus: [
 		// uranus: ["water", "air", "acid", "methane"],
-		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 5, stock: 100 },
-		{ name: "Iron (Fe)", mass: 7873, price: 30, stock: 0 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 15, stock: 10000 },
-		{ name: "Proteins", mass: 3500, price: 10, stock: 0 },
-		{ name: "People", mass: 1500, price: 40, stock: planets["uranus"].population },
-		{ name: "Sugars (C6H12O6)", mass: 2000, price: 10, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
-		{ name: "Water (H2O)", mass: 1000, price: 10, stock: 100 },
+		{ shortName: "Air", name: "Air (N2 + O2 + CO2)", mass: 870, price: 5, },
+		{ shortName: "Iron", name: "Iron (Fe)", mass: 7873, price: 30, },
+		{ shortName: "Methane", name: "Liquid Methane (CH4)", mass: 424, price: 15, },
+		{ shortName: "Protein", name: "Protein", mass: 3500, price: 10, },
+		{ shortName: "Population", name: "People", mass: 1500, price: 40, },
+		{ shortName: "Sugar", name: "Sugar (C6H12O6)", mass: 2000, price: 10, },
+		{ shortName: "Acid", name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, },
+		{ shortName: "Water", name: "Water (H2O)", mass: 1000, price: 10, },
 	],
 	neptune: [
 		// neptune: ["water", "air", "acid", "methane"],
-		{ name: "Air (N2 + O2 + CO2)", mass: 870, price: 7, stock: 100 },
-		{ name: "Iron (Fe)", mass: 7873, price: 100, stock: 0 },
-		{ name: "Liquid Methane (CH4)", mass: 424, price: 20, stock: 10000 },
-		{ name: "Proteins", mass: 3500, price: 30, stock: 0 },
-		{ name: "People", mass: 1500, price: 50, stock: planets["neptune"].population },
-		{ name: "Sugars (C6H12O6)", mass: 2000, price: 15, stock: 0 },
-		{ name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, stock: 0 },
-		{ name: "Water (H2O)", mass: 1000, price: 15, stock: 100 },
+		{ shortName: "Air", name: "Air (N2 + O2 + CO2)", mass: 870, price: 7, },
+		{ shortName: "Iron", name: "Iron (Fe)", mass: 7873, price: 100, },
+		{ shortName: "Methane", name: "Liquid Methane (CH4)", mass: 424, price: 20, },
+		{ shortName: "Protein", name: "Protein", mass: 3500, price: 30, },
+		{ shortName: "Population", name: "People", mass: 1500, price: 50, },
+		{ shortName: "Sugar", name: "Sugar (C6H12O6)", mass: 2000, price: 15, },
+		{ shortName: "Acid", name: "Sulphuric Acid (H2SO4)", mass: 1826, price: 1, },
+		{ shortName: "Water", name: "Water (H2O)", mass: 1000, price: 15, },
 	]
 }
 
 
 express.get('/buyGoods', function (request, response) {
 	let planet = request.query.planet;
+
+	// This whole loop is a hot mess, I need to refactor this stock and planet system.
+	for (let item in planets[planet]) {
+		for (let good of goods[planet]) {
+			if (good.shortName.toLowerCase() == item) {
+				good.stock = planets[planet][item];
+				break;
+			}
+		}
+	}
+
 	response.send(goods[planet]);
 });
 
@@ -262,12 +314,13 @@ express.post('/buyGoods', function (request, response) {
 			if (quantity * good.price > wealth) {
 				return response.send({ message: "Transaction Declined" });
 			}
+
 			// You can't sell more than exists.
-			if (good.stock > quantity) {
-				good.stock -= quantity;
+			if (planets[planet][good.shortName.toLowerCase()] > quantity) {
+				planets[planet][good.shortName.toLowerCase()] -= quantity;
 			} else {
-				quantity = good.stock;
-				good.stock = 0;
+				quantity = planets[planet][good.shortName.toLowerCase()];
+				planets[planet][good.shortName.toLowerCase()] = 0;
 			}
 
 			planets[planet].wealth += quantity * good.price;
@@ -289,22 +342,22 @@ express.post('/sellGoods', function (request, response) {
 	let planet = request.body.planet;
 	for (let good of goods[planet]) {
 		if (good.name == name) {
-			// You can't sell more than the available wealth.
 			if (good.price * quantity > planets[planet].wealth) {
 				return response.send({
 					message: "Planet has insufficient wealth to purchase those goods"
 				});
-			} else {
-				planets[planet].wealth -= quantity * good.price;
-
-				// Return what is going into the users inventory.
-				return response.send({
-					name: good.name,
-					price: good.price,
-					mass: good.mass,
-					stock: quantity
-				});
 			}
+
+			planets[planet][good.shortName.toLowerCase()] += quantity;
+			planets[planet].wealth -= quantity * good.price;
+
+			// Return what is going into the users inventory.
+			return response.send({
+				name: good.name,
+				price: good.price,
+				mass: good.mass,
+				stock: quantity
+			});
 		}
 	}
 });
@@ -345,11 +398,11 @@ const ships = {
 	// }
 };
 
-setInterval(() => {
-	for (let ship in ships) {
+// setInterval(() => {
+// 	for (let ship in ships) {
 
-	}
-}, 60000);
+// 	}
+// }, 60000);
 
 express.post('/updatePosition', function (request, response) {
 	let accId = request.body.accId;
@@ -538,7 +591,7 @@ express.post('/updateCity', function (request, response) {
 	// 	planet.air += Number(city.goods[0].stock);
 	// 	planet.population += Number(city.goods[4].stock);
 	// 	planet.protein += Number(city.goods[3].stock);
-	// 	planet.sugars += Number(city.goods[5].stock);
+	// 	planet.sugar += Number(city.goods[5].stock);
 	// 	planet.water += Number(city.goods[7].stock);
 	// 	planet.wealth += Number(city.wealth);
 	// } else {
@@ -551,8 +604,8 @@ express.post('/updateCity', function (request, response) {
 	// 	planet.protein -= Number(planet.players[accId].goods[3].stock);
 	// 	planet.protein += Number(city.goods[3].stock);
 
-	// 	planet.sugars -= Number(planet.players[accId].goods[5].stock);
-	// 	planet.sugars += Number(city.goods[5].stock);
+	// 	planet.sugar -= Number(planet.players[accId].goods[5].stock);
+	// 	planet.sugar += Number(city.goods[5].stock);
 
 	// 	planet.water -= Number(planet.players[accId].goods[7].stock);
 	// 	planet.water += Number(city.goods[7].stock);

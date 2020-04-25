@@ -17,6 +17,16 @@ button {
 	color: goldenrod;
 }
 
+input {
+	border: 3px solid goldenrod;
+	width: 23%;
+	font-size: 1.5em;
+	margin: 3px 0px;
+	
+	background-color: rgba(25, 25, 25, 0.75);
+	color: goldenrod;
+}
+
 @keyframes mymove {
 	0% {
 		background-position-y: -10%;
@@ -143,18 +153,24 @@ button {
 	height: 100%;
 }
 
+.factoryBox {
+	display: block;
+	padding: 10px;
+	margin: 5px;
+}
+
 .factory {
 	height: 30vh;
 	display: inline-block;
 	
-	margin: 0px auto;
+	margin: 5px;
 	
 	background-color: RGBA(25,25,25,0.75);
 	color: goldenrod;
 	
 	text-align: center;
-	top: 0px;
 }
+
 .shrinkGrowOptions {
 	position: absolute;
 	top: 0px;
@@ -201,3 +217,4 @@ button {
 	width: 1px;
 	height: 1px;
 }
+
